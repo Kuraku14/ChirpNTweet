@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">ChirpNTweet</string>
-    <string name="login">Login</string>
+    <string name="login">Connect with Twitter</string>
 </resources>
