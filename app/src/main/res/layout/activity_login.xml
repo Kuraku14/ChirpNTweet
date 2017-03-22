@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:gravity="center"
+            android:textColor="@android:color/white"
             android:layout_below="@+id/logo"
             android:textSize="40dp" />
 
@@ -35,6 +36,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:textSize="18dp"
+            android:textColor="@android:color/white"
             android:background="@drawable/login_btn_bgn"
             android:onClick="loginToRest"
             android:text="@string/login" />
