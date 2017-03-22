@@ -2,6 +2,7 @@ package com.dyadav.chirpntweet.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -64,11 +65,14 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 //Handle fetching in a thread with delay to avoid error "API Limit reached" = 429
-                //Handler handler = new Handler();
-                //mPage = page;
-                //Runnable runnableCode = () -> fetchArticles(page);
-                //handler.postDelayed(runnableCode, 2000);
-                populateTimeline();
+                Handler handler = new Handler();
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        populateTimeline(false, getMaxId());
+                    }
+                }, 1000);
             }
         };
         binding.rView.addOnScrollListener(scrollListener);
@@ -83,28 +87,34 @@ public class TimelineActivity extends AppCompatActivity {
                 client.postTweet("Hello", new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        Log.d(TAG, String.valueOf(statusCode));
+
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                        Log.d(TAG, String.valueOf(statusCode));
+
                     }
                 });
             }
         });
 
         //Fetch first page
-        populateTimeline();
+        populateTimeline(true, 0);
     }
 
-    private void populateTimeline() {
-        client.getHomeTimeline(1, new JsonHttpResponseHandler(){
+    private long getMaxId(){
+        return mTweetList.get(mTweetList.size()-1).getUid();
+    }
+
+    private void populateTimeline(final Boolean fRequest, long id) {
+
+        client.getHomeTimeline(fRequest, id, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d(TAG, String.valueOf(statusCode));
                 Log.d(TAG, response.toString());
-                mTweetList.clear();
+                if(fRequest)
+                    mTweetList.clear();
                 mTweetList.addAll(Tweet.fromJSONArray(response));
                 mAdapter.notifyDataSetChanged();
             }
