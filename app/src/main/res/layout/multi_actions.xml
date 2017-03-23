@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="4"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:id="@+id/reply_action"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/reply_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/reply"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/reply_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/reply_icon"
+            android:text="5"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/retweet_action"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/retweet_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/retweet"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/retweet_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/retweet_icon"
+            android:text="5"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/favorite_action"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/facvorite_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/heart"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/facvorite_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/facvorite_icon"
+            android:text="5"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/message_action"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/message_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/message_reply"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/message_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/message_icon"
+            android:text="5"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -9,6 +9,7 @@ public class User {
     private long uid;
     private String screenName;
     private String profileImageURL;
+    private Boolean verified;
 
     public String getName() {
         return name;
@@ -26,6 +27,10 @@ public class User {
         return profileImageURL;
     }
 
+    public Boolean getVerified() {
+        return verified;
+    }
+
     public static User fromJson(JSONObject jsonObject) {
         User user = new User();
 
@@ -34,6 +39,7 @@ public class User {
             user.uid = jsonObject.getLong("id");
             user.screenName = jsonObject.getString("screen_name");
             user.profileImageURL = jsonObject.getString("profile_image_url");
+            user.verified = jsonObject.getBoolean("verified");
         } catch (JSONException e) {
             e.printStackTrace();
         }

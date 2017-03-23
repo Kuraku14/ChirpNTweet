@@ -4,8 +4,11 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +21,7 @@ import com.dyadav.chirpntweet.databinding.ActivityTimelineBinding;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.EndlessRecyclerViewScrollListener;
+import com.dyadav.chirpntweet.utils.NetworkUtility;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -57,6 +61,11 @@ public class TimelineActivity extends AppCompatActivity {
         binding.rView.setAdapter(mAdapter);
         binding.rView.setItemAnimator(new DefaultItemAnimator());
 
+        //Recylerview decorater
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        binding.rView.addItemDecoration(itemDecoration);
+
         mLayoutManager = new LinearLayoutManager(this);
         binding.rView.setLayoutManager(mLayoutManager);
 
@@ -78,6 +87,19 @@ public class TimelineActivity extends AppCompatActivity {
         binding.rView.addOnScrollListener(scrollListener);
 
         //Swipe to refresh
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Check internet
+                if(!NetworkUtility.isOnline()) {
+                    Snackbar.make(binding.cLayout, "Check your internet Connection", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                //Fetch first page
+                populateTimeline(true, 0);
+            }
+        });
+
 
         // Attach FAB listener
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -117,11 +139,13 @@ public class TimelineActivity extends AppCompatActivity {
                     mTweetList.clear();
                 mTweetList.addAll(Tweet.fromJSONArray(response));
                 mAdapter.notifyDataSetChanged();
+                binding.swipeContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                super.onFailure(statusCode, headers, throwable, object);
+                Snackbar.make(binding.cLayout, "Error fetching tweets !", Snackbar.LENGTH_LONG).show();
+                binding.swipeContainer.setRefreshing(false);
             }
         });
     }

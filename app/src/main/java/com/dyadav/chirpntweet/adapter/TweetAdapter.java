@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.modal.Tweet;
+import com.dyadav.chirpntweet.utils.DateUtility;
 
 import java.util.ArrayList;
 
@@ -21,14 +22,17 @@ public class TweetAdapter extends
     private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView userName, tweetBody;
-        public ImageView userProfileImage;
+        public TextView userName, tweetBody, screenName, timeStamp;
+        public ImageView userProfileImage, verifiedSymbol;
 
         public MyViewHolder(View view) {
             super(view);
             userName = (TextView) view.findViewById(R.id.userName);
             tweetBody = (TextView) view.findViewById(R.id.tweetBody);
             userProfileImage = (ImageView) view.findViewById(R.id.profileImage);
+            screenName = (TextView) view.findViewById(R.id.screenName);
+            verifiedSymbol = (ImageView) view.findViewById(R.id.verified);
+            timeStamp = (TextView) view.findViewById(R.id.timeStamp);
         }
     }
 
@@ -54,9 +58,12 @@ public class TweetAdapter extends
                     .load(tweet.getUser().getProfileImageURL())
                     .into(holder.userProfileImage);
 
-            holder.userName.setText(tweet.getUser().getScreenName());
-
+            holder.userName.setText(tweet.getUser().getName());
+            holder.screenName.setText("@" + tweet.getUser().getScreenName());
             holder.tweetBody.setText(tweet.getBody());
+            holder.timeStamp.setText(DateUtility.getRelativeTimeAgo(tweet.getCreatedAt()));
+            if(tweet.getUser().getVerified())
+                holder.verifiedSymbol.setImageDrawable(context.getResources().getDrawable(R.drawable.verified));
         }
     }
 
