@@ -20,6 +20,7 @@ import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.databinding.ActivityTimelineBinding;
 import com.dyadav.chirpntweet.fragments.ComposeDialog;
 import com.dyadav.chirpntweet.modal.Tweet;
+import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.EndlessRecyclerViewScrollListener;
 import com.dyadav.chirpntweet.utils.NetworkUtility;
@@ -40,6 +41,7 @@ public class TimelineActivity extends AppCompatActivity {
     EndlessRecyclerViewScrollListener scrollListener;
     LinearLayoutManager mLayoutManager;
     private ActivityTimelineBinding binding;
+    private User user = null;
 
     private String TAG = "TimelineActivity";
 
@@ -94,6 +96,7 @@ public class TimelineActivity extends AppCompatActivity {
                 //Check internet
                 if(!NetworkUtility.isOnline()) {
                     Snackbar.make(binding.cLayout, "Check your internet Connection", Snackbar.LENGTH_LONG).show();
+                    binding.swipeContainer.setRefreshing(false);
                     return;
                 }
                 //Fetch first page
@@ -108,12 +111,46 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ComposeDialog fDialog = new ComposeDialog();
+                if (user != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("userinfo", user);
+                    //Dialog listener
+                    fDialog.setFinishDialogListener(new ComposeDialog.ComposeTweetListener(){
+                        @Override
+                        public void onFinishDialog(Tweet tweet) {
+                            if (tweet != null) {
+                                mTweetList.add(0,tweet);
+                                mAdapter.notifyItemInserted(0);
+                                binding.rView.scrollToPosition(0);
+                            }
+                        }
+                    });
+                    fDialog.setArguments(bundle);
+                }
                 fDialog.show(TimelineActivity.this.getSupportFragmentManager(),"");
             }
         });
 
+        //Fetch logged in users info
+        fetchUserInfo();
+
         //Fetch first page
         populateTimeline(true, 0);
+    }
+
+    private void fetchUserInfo() {
+        client.getAccountInfo(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, response.toString());
+                user = User.fromJson(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
+                Snackbar.make(binding.cLayout, "Error getting user info !", Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     private long getMaxId(){

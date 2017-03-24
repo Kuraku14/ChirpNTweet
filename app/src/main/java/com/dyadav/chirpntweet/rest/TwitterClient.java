@@ -44,4 +44,11 @@ public class TwitterClient extends OAuthBaseClient{
 
     //4. Favorite a tweet
 
+    //5. Get in logged in user info
+    public void getAccountInfo(AsyncHttpResponseHandler handler){
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+        RequestParams params = new RequestParams();
+        client.get(apiUrl, params, handler);
+    }
+
 }

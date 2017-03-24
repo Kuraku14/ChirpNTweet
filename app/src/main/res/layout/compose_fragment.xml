@@ -1,43 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/tweetBody"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:padding="10dp"
-        android:lines="10"
-        android:background="@android:color/transparent"
-        android:hint="What's happening?"/>
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/close"
+            android:contentDescription="Close button" />
 
-    <Button
-        android:id="@+id/tweetButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/tweetBody"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:layout_margin="20dp"
-        android:background="@drawable/compose_tweet_button"
-        android:text="Tweet" />
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rounded_corner_dialog"
+            android:layout_margin="10dp"
+            android:contentDescription="Profile Image" />
 
-    <TextView
-        android:id="@+id/tweetCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_alignBaseline="@+id/tweetButton"
-        android:layout_alignBottom="@+id/tweetButton"
-        android:layout_toLeftOf="@+id/tweetButton"
-        android:layout_toStartOf="@+id/tweetButton" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/profileImage"
+            android:layout_toStartOf="@+id/profileImage"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/screenName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/profileImage"
+            android:layout_toStartOf="@+id/profileImage"
+            android:layout_below="@+id/userName"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp" />
+
+        <EditText
+            android:id="@+id/tweetBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/closeButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:gravity="top"
+            android:maxLength="140"
+            android:lines="10"
+            android:background="@android:color/transparent"
+            android:hint="What's happening ?"/>
+
+        <Button
+            android:id="@+id/tweetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tweetBody"
+            android:textColor="@android:color/white"
+            android:textAlignment="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/compose_tweet_button"
+            android:text="Tweet" />
+
+        <TextView
+            android:id="@+id/tweetCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="140"
+            android:layout_alignBaseline="@+id/tweetButton"
+            android:layout_alignBottom="@+id/tweetButton"
+            android:layout_toLeftOf="@+id/tweetButton"
+            android:layout_toStartOf="@+id/tweetButton" />
+    </RelativeLayout>
+</layout>
