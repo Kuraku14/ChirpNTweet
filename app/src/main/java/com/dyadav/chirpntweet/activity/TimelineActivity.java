@@ -18,6 +18,7 @@ import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.adapter.TweetAdapter;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.databinding.ActivityTimelineBinding;
+import com.dyadav.chirpntweet.fragments.ComposeDialog;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.EndlessRecyclerViewScrollListener;
@@ -106,17 +107,8 @@ public class TimelineActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.postTweet("Hello", new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-
-                    }
-                });
+                ComposeDialog fDialog = new ComposeDialog();
+                fDialog.show(TimelineActivity.this.getSupportFragmentManager(),"");
             }
         });
 

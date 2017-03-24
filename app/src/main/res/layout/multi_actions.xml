@@ -20,6 +20,7 @@
             android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/reply"
+            android:background="@android:color/transparent"
             android:layout_marginRight="5dp"/>
 
         <TextView
@@ -43,6 +44,7 @@
             android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/retweet"
+            android:background="@android:color/transparent"
             android:layout_marginRight="5dp"/>
 
         <TextView
@@ -67,6 +69,7 @@
             android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/heart"
+            android:background="@android:color/transparent"
             android:layout_marginRight="5dp"/>
 
         <TextView
@@ -91,6 +94,7 @@
             android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/message_reply"
+            android:background="@android:color/transparent"
             android:layout_marginRight="5dp"/>
 
         <TextView

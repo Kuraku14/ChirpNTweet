@@ -29,8 +29,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-
     // DBFlow for simple persistence with an ORM
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
