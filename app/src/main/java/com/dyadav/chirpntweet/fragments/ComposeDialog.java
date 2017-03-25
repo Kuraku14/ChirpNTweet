@@ -1,12 +1,15 @@
 package com.dyadav.chirpntweet.fragments;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,11 @@ public class ComposeDialog extends DialogFragment {
 
     private ComposeFragmentBinding binding;
     int MAX_TWEET_LENGTH = 140;
+    int remain_char;
+    SharedPreferences sharedpreferences;
+
+    public static final String tweetDraft = "draft" ;
+    public static final String tweet = "tweet";
 
     public ComposeDialog() {}
 
@@ -40,6 +48,39 @@ public class ComposeDialog extends DialogFragment {
 
     public void setFinishDialogListener(ComposeTweetListener listener) {
         mListener = listener;
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if (remain_char > 0)
+            notifySave();
+    }
+    
+    private void notifySave() {
+        sharedpreferences = getContext().getSharedPreferences(tweetDraft, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+
+        //Show a popup to save draft to Shared pref
+        new AlertDialog.Builder(getContext())
+                .setTitle("")
+                .setMessage("Do you want to save the tweet ?")
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        editor.putString(tweet, binding.tweetBody.getText().toString());
+                        editor.commit();
+                        dismiss();
+                    }
+                })
+                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Empty the shared pref for any draft
+                        editor.putString(tweet, null);
+                        editor.commit();
+                        dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override
@@ -63,6 +104,13 @@ public class ComposeDialog extends DialogFragment {
             binding.screenName.setText("@" + user.getScreenName());
         }
 
+        //Fetch from shared preference and saved draft and display
+        sharedpreferences = getContext().getSharedPreferences(tweetDraft, Context.MODE_PRIVATE);
+        String draft = sharedpreferences.getString(tweet, null);
+
+        if (draft != null)
+            binding.tweetBody.setText(draft);
+
         //Attach a listener to count tweet length
         binding.tweetBody.addTextChangedListener(new TextWatcher() {
 
@@ -73,7 +121,7 @@ public class ComposeDialog extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                int remain_char = MAX_TWEET_LENGTH-charSequence.length();
+                remain_char = MAX_TWEET_LENGTH-charSequence.length();
                 binding.tweetCount.setText(String.valueOf(remain_char));
             }
 
@@ -97,10 +145,13 @@ public class ComposeDialog extends DialogFragment {
         binding.closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //prompt the user if there is exsisting text
                 //Hide Keyboard
                 KeyboardUtility.hideKeyboard(getContext(), getView());
-                dismiss();
+                //prompt the user if there is exsisting text
+                if (remain_char > 0)
+                    notifySave();
+                else
+                    dismiss();
             }
         });
 

@@ -36,6 +36,7 @@ public class DetailedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detailed);
         ButterKnife.bind(this);
+
         //Setting toolbar
         setSupportActionBar(binding.toolbar);
 

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ChirpNTweet</string>
     <string name="login">Connect with Twitter</string>
+    <string name="connection_error">Check your internet Connection</string>
+    <string name="user_info_error">Error getting user info !</string>
+    <string name="error_fetch">Error fetching tweets !</string>
 </resources>

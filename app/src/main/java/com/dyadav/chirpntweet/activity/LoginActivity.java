@@ -14,8 +14,6 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 
     private ActivityLoginBinding binding;
 
-    private String TAG = "ChirpNTweet";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

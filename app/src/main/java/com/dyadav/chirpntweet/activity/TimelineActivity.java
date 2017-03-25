@@ -97,7 +97,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onRefresh() {
                 //Check internet
                 if(!NetworkUtility.isOnline()) {
-                    Snackbar.make(binding.cLayout, "Check your internet Connection", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(binding.cLayout, R.string.connection_error, Snackbar.LENGTH_LONG).show();
                     binding.swipeContainer.setRefreshing(false);
                     return;
                 }
@@ -160,7 +160,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                Snackbar.make(binding.cLayout, "Error getting user info !", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.cLayout, R.string.user_info_error, Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -185,7 +185,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                Snackbar.make(binding.cLayout, "Error fetching tweets !", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.cLayout, R.string.error_fetch, Snackbar.LENGTH_LONG).show();
                 binding.swipeContainer.setRefreshing(false);
             }
         });
