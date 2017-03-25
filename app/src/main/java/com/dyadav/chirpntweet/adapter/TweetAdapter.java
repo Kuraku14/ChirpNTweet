@@ -18,6 +18,9 @@ import com.dyadav.chirpntweet.utils.DateUtility;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TweetAdapter extends
         RecyclerView.Adapter<TweetAdapter.MyViewHolder> {
 
@@ -25,25 +28,48 @@ public class TweetAdapter extends
     private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView userName, tweetBody, screenName, timeStamp, favCount, retweetCount;
-        public ImageView userProfileImage, verifiedSymbol, tweetImage;
-        public ImageButton reply, retweet, favorite, message;
+        @BindView(R.id.userName)
+        TextView userName;
+
+        @BindView(R.id.tweetBody)
+        TextView tweetBody;
+
+        @BindView(R.id.profileImage)
+        ImageView userProfileImage;
+
+        @BindView(R.id.screenName)
+        TextView screenName;
+
+        @BindView(R.id.verified)
+        ImageView verifiedSymbol;
+
+        @BindView(R.id.timeStamp)
+        TextView timeStamp;
+
+        @BindView(R.id.reply_icon)
+        ImageButton reply;
+
+        @BindView(R.id.retweet_icon)
+        ImageButton retweet;
+
+        @BindView(R.id.favorite_icon)
+        ImageButton favorite;
+
+        @BindView(R.id.message_icon)
+        ImageButton message;
+
+        @BindView(R.id.facvorite_count)
+        TextView favCount;
+
+        @BindView(R.id.retweet_count)
+        TextView retweetCount;
+
+        @BindView(R.id.tweetImage)
+        ImageView tweetImage;
 
         public MyViewHolder(View view) {
             super(view);
-            userName = (TextView) view.findViewById(R.id.userName);
-            tweetBody = (TextView) view.findViewById(R.id.tweetBody);
-            userProfileImage = (ImageView) view.findViewById(R.id.profileImage);
-            screenName = (TextView) view.findViewById(R.id.screenName);
-            verifiedSymbol = (ImageView) view.findViewById(R.id.verified);
-            timeStamp = (TextView) view.findViewById(R.id.timeStamp);
-            reply = (ImageButton) view.findViewById(R.id.reply_icon);
-            retweet = (ImageButton) view.findViewById(R.id.retweet_icon);
-            favorite = (ImageButton) view.findViewById(R.id.favorite_icon);
-            message = (ImageButton) view.findViewById(R.id.message_icon);
-            favCount = (TextView) view.findViewById(R.id.facvorite_count);
-            retweetCount = (TextView) view.findViewById(R.id.retweet_count);
-            tweetImage = (ImageView) view.findViewById(R.id.tweetImage);
+            ButterKnife.bind(this, view);
         }
     }
 
@@ -76,6 +102,9 @@ public class TweetAdapter extends
                 Log.d("Media type", media.getType());
                 Log.d("Media url", media.getMediaUrlHttps());
                 Log.d("Media url https", media.getMediaUrl());
+
+                if (media.getType().equals("Video"))
+                    Log.d("Media video url", media.getVideoUrlHttps());
                 Glide.with(context)
                         .load(media.getMediaUrlHttps())
                         .into(holder.tweetImage);
@@ -83,6 +112,8 @@ public class TweetAdapter extends
                     Log.d("Ex Media type", exMedia.getType());
                     Log.d("Ex Media url", exMedia.getMediaUrlHttps());
                     Log.d("Ex Media url https", exMedia.getMediaUrl());
+                    if (exMedia.getType().equals("Video"))
+                        Log.d("Ex Media video url", exMedia.getVideoUrlHttps());
                 }
             } else {
                 holder.tweetImage.setVisibility(View.GONE);
