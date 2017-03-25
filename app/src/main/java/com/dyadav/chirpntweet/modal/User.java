@@ -12,7 +12,7 @@ public class User implements Parcelable{
     private long uid;
     private String screenName;
     private String profileImageURL;
-    private Boolean verified;
+    private boolean verified;
 
     public User() {
     }
@@ -33,7 +33,7 @@ public class User implements Parcelable{
         return profileImageURL;
     }
 
-    public Boolean getVerified() {
+    public boolean getVerified() {
         return verified;
     }
 
@@ -63,6 +63,7 @@ public class User implements Parcelable{
         parcel.writeLong(uid);
         parcel.writeString(screenName);
         parcel.writeString(profileImageURL);
+        parcel.writeByte((byte) (verified ? 1 : 0));
     }
 
     protected User(Parcel in) {
@@ -70,6 +71,7 @@ public class User implements Parcelable{
         uid = in.readLong();
         screenName = in.readString();
         profileImageURL = in.readString();
+        verified = in.readByte() != 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

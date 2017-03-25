@@ -1,5 +1,6 @@
 package com.dyadav.chirpntweet.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.EndlessRecyclerViewScrollListener;
+import com.dyadav.chirpntweet.utils.ItemClickSupport;
 import com.dyadav.chirpntweet.utils.NetworkUtility;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -104,6 +106,16 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
 
+        //Click on tweet for detailed activity
+        ItemClickSupport.addTo(binding.rView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Intent intent = new Intent(TimelineActivity.this, DetailedActivity.class);
+                Tweet tweet = mTweetList.get(position);
+                intent.putExtra("tweet", tweet);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         // Attach FAB listener
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -157,7 +169,7 @@ public class TimelineActivity extends AppCompatActivity {
         return mTweetList.get(mTweetList.size()-1).getUid();
     }
 
-    private void populateTimeline(final Boolean fRequest, long id) {
+    private void populateTimeline(final boolean fRequest, long id) {
 
         client.getHomeTimeline(fRequest, id, new JsonHttpResponseHandler(){
             @Override
