@@ -47,6 +47,18 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp" />
 
+        <ImageButton
+            android:id="@+id/draftButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/screenName"
+            android:layout_toStartOf="@+id/screenName"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/quill"
+            android:contentDescription="Drafts" />
+
         <EditText
             android:id="@+id/tweetBody"
             android:layout_width="match_parent"

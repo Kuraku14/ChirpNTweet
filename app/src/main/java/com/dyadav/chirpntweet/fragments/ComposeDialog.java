@@ -1,12 +1,11 @@
 package com.dyadav.chirpntweet.fragments;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,13 +17,18 @@ import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.databinding.ComposeFragmentBinding;
+import com.dyadav.chirpntweet.modal.Drafts;
+import com.dyadav.chirpntweet.modal.Drafts_Table;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.KeyboardUtility;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -33,7 +37,6 @@ public class ComposeDialog extends DialogFragment {
     private ComposeFragmentBinding binding;
     int MAX_TWEET_LENGTH = 140;
     int remain_char;
-    SharedPreferences sharedpreferences;
 
     public static final String tweetDraft = "draft" ;
     public static final String tweet = "tweet";
@@ -57,25 +60,21 @@ public class ComposeDialog extends DialogFragment {
     }
     
     private void notifySave() {
-        sharedpreferences = getContext().getSharedPreferences(tweetDraft, Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedpreferences.edit();
-
         //Show a popup to save draft to Shared pref
         new AlertDialog.Builder(getContext())
                 .setTitle("")
                 .setMessage("Do you want to save the tweet ?")
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        editor.putString(tweet, binding.tweetBody.getText().toString());
-                        editor.commit();
+                        //Save to DB Drafts
+                        Drafts drafts = new Drafts();
+                        drafts.setDraft(binding.tweetBody.getText().toString());
+                        drafts.save();
                         dismiss();
                     }
                 })
                 .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //Empty the shared pref for any draft
-                        editor.putString(tweet, null);
-                        editor.commit();
                         dismiss();
                     }
                 })
@@ -89,10 +88,41 @@ public class ComposeDialog extends DialogFragment {
         String str = null;
         User user;
 
-        getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_dialog);
+        //getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_dialog);
 
         binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()),
                                             R.layout.compose_fragment, container, false);
+
+        //Check for drafts else disable button
+        if(getDrafts() == 0) {
+            binding.draftButton.setVisibility(View.GONE);
+        } else {
+            //Launch drafts activity
+            binding.draftButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fm = getFragmentManager();
+                    DraftsDialog fDialog = new DraftsDialog();
+                    fDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Dialog);
+
+                    //Dialog listener
+                    fDialog.setFinishDialogListener(new DraftsDialog.DraftsListener() {
+                        @Override
+                        public void onFinishDialog(String draft) {
+                            if (draft != null) {
+                                binding.tweetBody.append(draft);
+                                binding.tweetCount.setText(String.valueOf((MAX_TWEET_LENGTH-binding.tweetBody.length())));
+                                if(getDrafts() == 0) {
+                                    binding.draftButton.setVisibility(View.GONE);
+                                }
+                            }
+                        }
+                    });
+
+                    fDialog.show(getActivity().getSupportFragmentManager(), "");
+                }
+            });
+        }
 
         //Fetch logged in user info
         Bundle bundle = getArguments();
@@ -107,14 +137,11 @@ public class ComposeDialog extends DialogFragment {
             binding.screenName.setText("@" + user.getScreenName());
         }
 
-        //Fetch from shared preference and saved draft and display
-        sharedpreferences = getContext().getSharedPreferences(tweetDraft, Context.MODE_PRIVATE);
-        String draft = sharedpreferences.getString(tweet, null);
-
-        if (str != null)
+        //Fetch from shared preference and saved draft and display, hide drafts
+        if (str != null) {
             binding.tweetBody.setText(str);
-        else if (draft != null)
-            binding.tweetBody.setText(draft);
+            binding.draftButton.setVisibility(View.GONE);
+        }
 
         binding.tweetCount.setText(String.valueOf((MAX_TWEET_LENGTH-binding.tweetBody.length())));
 
@@ -163,6 +190,11 @@ public class ComposeDialog extends DialogFragment {
         });
 
         return binding.getRoot();
+    }
+
+    private int getDrafts() {
+        List<Drafts> drafts = SQLite.select().from(Drafts.class).orderBy(Drafts_Table.id, false).queryList();
+        return drafts.size();
     }
 
     private void postTweet() {
