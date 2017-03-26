@@ -116,6 +116,8 @@ public class ComposeDialog extends DialogFragment {
         else if (draft != null)
             binding.tweetBody.setText(draft);
 
+        binding.tweetCount.setText(String.valueOf((MAX_TWEET_LENGTH-binding.tweetBody.length())));
+
         //Attach a listener to count tweet length
         binding.tweetBody.addTextChangedListener(new TextWatcher() {
 
@@ -141,7 +143,7 @@ public class ComposeDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //Hide Keyboard
-                KeyboardUtility.hideKeyboard(getContext(), getView());
+                KeyboardUtility.hideKeyboard(getContext(), v);
                 postTweet();
             }
         });

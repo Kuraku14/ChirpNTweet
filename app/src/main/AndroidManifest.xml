@@ -40,7 +40,8 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DetailedActivity" />
+        <activity android:name=".activity.DetailedActivity"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>

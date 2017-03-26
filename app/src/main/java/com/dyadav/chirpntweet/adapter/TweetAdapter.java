@@ -1,6 +1,7 @@
 package com.dyadav.chirpntweet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,20 +13,28 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
+import com.dyadav.chirpntweet.activity.DetailedActivity;
+import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.modal.Media;
 import com.dyadav.chirpntweet.modal.Tweet;
+import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 
 public class TweetAdapter extends
         RecyclerView.Adapter<TweetAdapter.MyViewHolder> {
 
     private ArrayList<Tweet> tweetList;
     private Context context;
+    private TwitterClient client;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.userName)
@@ -87,7 +96,7 @@ public class TweetAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Tweet tweet = tweetList.get(position);
 
         if (tweet != null) {
@@ -116,16 +125,85 @@ public class TweetAdapter extends
                 holder.verifiedSymbol.setImageDrawable(context.getResources().getDrawable(R.drawable.verified));
             if(tweet.getFavorited())
                 holder.favorite.setImageDrawable(context.getResources().getDrawable(R.drawable.red_heart));
+            else
+                holder.favorite.setImageDrawable(context.getResources().getDrawable(R.drawable.heart));
 
             if(tweet.getRetweeted())
                 holder.retweet.setImageDrawable(context.getResources().getDrawable(R.drawable.green_retweet));
+            else
+                holder.retweet.setImageDrawable(context.getResources().getDrawable(R.drawable.retweet));
             holder.favCount.setText(String.valueOf(tweet.getFavoriteCount()));
             holder.retweetCount.setText(String.valueOf(tweet.getRetweetCount()));
+
+            holder.favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    markFavorite(tweet.isFavorited(), tweet.getUid(), position);
+                }
+            });
+
+            holder.retweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    retweet(tweet.isRetweeted(), tweet.getUid(), position);
+                }
+            });
+
+            holder.reply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, DetailedActivity.class);
+                    intent.putExtra("tweet", tweet);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
     @Override
     public int getItemCount() {
         return tweetList.size();
+    }
+
+    private void markFavorite(boolean favorite, Long id, final int position) {
+        client = TwitterApplication.getRestClient();
+        client.setFavorite(!favorite, id,new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    //JSONObject jsonObject = response.getJSONObject(0);
+                    Tweet tweet = Tweet.fromJson(response);
+                    tweetList.set(position, tweet);
+                    notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            }
+        });
+    }
+
+    private void retweet(boolean isRetweet, Long id, final int position) {
+        client = TwitterApplication.getRestClient();
+        client.retweet(!isRetweet, id,new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    //JSONObject jsonObject = response.getJSONObject(0);
+                    Tweet tweet = Tweet.fromJson(response);
+                    tweetList.set(position, tweet);
+                    notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            }
+        });
     }
 }

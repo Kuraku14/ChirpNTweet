@@ -107,7 +107,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 //Check internet
-                if(!NetworkUtility.isOnline()) {
+                if (!NetworkUtility.isOnline()) {
                     Snackbar.make(binding.cLayout, R.string.connection_error, Snackbar.LENGTH_LONG).show();
                     binding.swipeContainer.setRefreshing(false);
                     return;
@@ -169,24 +169,24 @@ public class TimelineActivity extends AppCompatActivity {
             bundle.putParcelable("userinfo", user);
             bundle.putString("intentinfo", s);
             //Dialog listener
-            fDialog.setFinishDialogListener(new ComposeDialog.ComposeTweetListener(){
+            fDialog.setFinishDialogListener(new ComposeDialog.ComposeTweetListener() {
                 @Override
                 public void onFinishDialog(Tweet tweet) {
                     if (tweet != null) {
-                        mTweetList.add(0,tweet);
+                        mTweetList.add(0, tweet);
                         mAdapter.notifyItemInserted(0);
                         binding.rView.scrollToPosition(0);
                     }
                 }
             });
             fDialog.setArguments(bundle);
-            fDialog.show(TimelineActivity.this.getSupportFragmentManager(),"");
+            fDialog.show(TimelineActivity.this.getSupportFragmentManager(), "");
         }
 
     }
 
     private void fetchUserInfo() {
-        client.getAccountInfo(new JsonHttpResponseHandler(){
+        client.getAccountInfo(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG, response.toString());
@@ -200,15 +200,15 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
-    private long getMaxId(){
-        return mTweetList.get(mTweetList.size()-1).getUid();
+    private long getMaxId() {
+        return mTweetList.get(mTweetList.size() - 1).getUid();
     }
 
     private void populateTimeline(final boolean fRequest, long id) {
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
-        if(!NetworkUtility.isOnline()) {
+        if (!NetworkUtility.isOnline()) {
             Snackbar.make(binding.cLayout, R.string.connection_error, Snackbar.LENGTH_LONG).show();
             binding.progressBar.setVisibility(View.GONE);
             //Show offline data
@@ -216,10 +216,10 @@ public class TimelineActivity extends AppCompatActivity {
             return;
         }
 
-        client.getHomeTimeline(fRequest, id, new JsonHttpResponseHandler(){
+        client.getHomeTimeline(fRequest, id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                if(fRequest)
+                if (fRequest)
                     mTweetList.clear();
 
                 ArrayList<Tweet> newTweet = Tweet.fromJSONArray(response);
@@ -250,7 +250,7 @@ public class TimelineActivity extends AppCompatActivity {
         }
     }
 
-    void addToDb(ArrayList<Tweet> newTweet){
+    void addToDb(ArrayList<Tweet> newTweet) {
         FlowManager.getDatabase(TwitterDb.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Tweet>() {
@@ -271,5 +271,12 @@ public class TimelineActivity extends AppCompatActivity {
 
                     }
                 }).build().execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Fetch again to refersh screen
+        populateTimeline(true, 0);
     }
 }

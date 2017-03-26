@@ -4,4 +4,7 @@
     <string name="connection_error">Check your internet Connection</string>
     <string name="user_info_error">Error getting user info !</string>
     <string name="error_fetch">Error fetching tweets !</string>
+    <string name="reply">reply</string>
+    <string name="reply_success">Tweet reply success</string>
+    <string name="reply_failed">Tweet reply failed</string>
 </resources>

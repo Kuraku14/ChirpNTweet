@@ -41,8 +41,28 @@ public class TwitterClient extends OAuthBaseClient{
     }
 
     //3. Retweet
+    public void retweet(boolean retweet, long id, AsyncHttpResponseHandler handler){
+        String apiUrl;
+        if(retweet){
+            apiUrl = getApiUrl("statuses/retweet/"+id+".json");
+        }else{
+            apiUrl = getApiUrl("statuses/unretweet/"+id+".json");
+        }
+        getClient().post(apiUrl,handler);
+    }
 
     //4. Favorite a tweet
+    public void setFavorite(boolean fav, long id, AsyncHttpResponseHandler handler){
+        String apiUrl;
+        if(fav){
+            apiUrl = getApiUrl("favorites/create.json");
+        }else{
+            apiUrl = getApiUrl("favorites/destroy.json");
+        }
+        RequestParams params = new RequestParams();
+        params.put("id", id);
+        getClient().post(apiUrl,params,handler);
+    }
 
     //5. Get in logged in user info
     public void getAccountInfo(AsyncHttpResponseHandler handler){
@@ -51,4 +71,14 @@ public class TwitterClient extends OAuthBaseClient{
         client.get(apiUrl, params, handler);
     }
 
+    //6. Send Message
+
+    //7. Reply to Tweet
+    public void postReply(long id, String status, AsyncHttpResponseHandler handler){
+        String apiUrl = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", status);
+        params.put("in_reply_to_status_id", id);
+        getClient().post(apiUrl,params,handler);
+    }
 }
