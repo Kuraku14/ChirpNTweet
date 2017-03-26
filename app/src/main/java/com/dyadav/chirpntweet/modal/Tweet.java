@@ -3,23 +3,56 @@ package com.dyadav.chirpntweet.modal;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.dyadav.chirpntweet.data.TwitterDb;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Tweet implements Parcelable {
+@Table(database = TwitterDb.class)
+public class Tweet extends BaseModel implements Parcelable {
+    @Column
     private String body;
+
+    @Column
+    @PrimaryKey
     private long uid;
+
+    @Column
     private String createdAt;
+
+    @ForeignKey(saveForeignKeyModel = true)
+    @Column
     private User user;
+
+    @Column
     private int retweetCount;
+
+    @Column
     private int favoriteCount;
+
+    @Column
     private boolean isRetweeted;
+
+    @Column
     private boolean isFavorited;
+
+    @Column
     private int messageCount;
+
+    @ForeignKey(saveForeignKeyModel = false)
+    @Column
     private Media media;
+
+    @ForeignKey(saveForeignKeyModel = false)
+    @Column
     private Media extendedMedia;
 
     public String getBody() {
@@ -64,6 +97,58 @@ public class Tweet implements Parcelable {
 
     public Media getExtendedMedia() {
         return extendedMedia;
+    }
+
+    public boolean isRetweeted() {
+        return isRetweeted;
+    }
+
+    public boolean isFavorited() {
+        return isFavorited;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setRetweetCount(int retweetCount) {
+        this.retweetCount = retweetCount;
+    }
+
+    public void setFavoriteCount(int favoriteCount) {
+        this.favoriteCount = favoriteCount;
+    }
+
+    public void setRetweeted(boolean retweeted) {
+        isRetweeted = retweeted;
+    }
+
+    public void setFavorited(boolean favorited) {
+        isFavorited = favorited;
+    }
+
+    public void setMessageCount(int messageCount) {
+        this.messageCount = messageCount;
+    }
+
+    public void setMedia(Media media) {
+        this.media = media;
+    }
+
+    public void setExtendedMedia(Media extendedMedia) {
+        this.extendedMedia = extendedMedia;
     }
 
     public Tweet() {}

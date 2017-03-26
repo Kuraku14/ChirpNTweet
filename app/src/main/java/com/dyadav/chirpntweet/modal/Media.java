@@ -2,14 +2,34 @@ package com.dyadav.chirpntweet.modal;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.dyadav.chirpntweet.data.TwitterDb;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Media implements Parcelable{
+@Table(database = TwitterDb.class)
+public class Media extends BaseModel implements Parcelable{
+
+    @Column
+    @PrimaryKey
+    private long uid;
+
+    @Column
     String type;
+
+    @Column
     String mediaUrlHttps;
+
+    @Column
     String mediaUrl;
+
+    @Column
     String videoUrlHttps;
 
     public Media() {
@@ -34,6 +54,14 @@ public class Media implements Parcelable{
         }
     };
 
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
     public String getType() {
         return type;
     }
@@ -50,13 +78,30 @@ public class Media implements Parcelable{
         return videoUrlHttps;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setMediaUrlHttps(String mediaUrlHttps) {
+        this.mediaUrlHttps = mediaUrlHttps;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
+    public void setVideoUrlHttps(String videoUrlHttps) {
+        this.videoUrlHttps = videoUrlHttps;
+    }
+
     public static Media fromJson(JSONObject jObject){
         Media media = new Media();
-
+        Log.d("Log", jObject.toString());
         try {
             media.type = jObject.getString("type");
             media.mediaUrl = jObject.getString("media_url");
             media.mediaUrlHttps = jObject.getString("media_url_https");
+            media.uid = jObject.getLong("id");
 
             //If media type video
             if(media.type.equals("video"))

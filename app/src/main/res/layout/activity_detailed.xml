@@ -67,6 +67,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
+            android:layout_alignBottom="@+id/userName"
             android:textColor="@android:color/primary_text_light"
             android:layout_toEndOf="@+id/userName"
             android:gravity="center"
@@ -81,6 +82,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:layout_below="@+id/toolbar"
+            android:layout_alignBottom="@+id/userName"
             android:layout_toEndOf="@+id/screenName"
             android:layout_toRightOf="@+id/screenName"/>
 
@@ -103,18 +105,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/timeStamp"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:textColor="@android:color/primary_text_light"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:autoLink="all"
             android:linksClickable="true"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/transparent_rounded_corner"
+            android:adjustViewBounds="true"
+            android:id="@+id/tweetImage"
+            android:layout_below="@+id/tweetBody"
+            android:layout_centerHorizontal="true" />
 
         <include layout="@layout/multi_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tweetBody"
-            android:layout_marginLeft="5dp"
+            android:layout_below="@+id/tweetImage"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_alignParentRight="true"

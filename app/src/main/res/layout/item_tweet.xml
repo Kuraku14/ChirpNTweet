@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userName"
-            android:layout_margin="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@android:color/primary_text_light"
             android:layout_alignLeft="@+id/userName"
             android:layout_alignStart="@+id/userName"
@@ -88,7 +88,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_below="@+id/tweetBody"
-            android:layout_height="250dp"
+            android:layout_alignLeft="@+id/userName"
+            android:layout_alignStart="@+id/userName"
+            android:layout_height="200dp"
             android:scaleType="fitXY"
             android:background="@drawable/transparent_rounded_corner"
             android:adjustViewBounds="true"
@@ -98,10 +100,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/timeStamp"
+            android:layout_toEndOf="@+id/timeStamp"
             android:layout_below="@+id/tweetImage"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 

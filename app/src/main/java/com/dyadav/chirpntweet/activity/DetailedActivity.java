@@ -3,12 +3,14 @@ package com.dyadav.chirpntweet.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.databinding.ActivityDetailedBinding;
+import com.dyadav.chirpntweet.modal.Media;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.utils.DateUtility;
 
@@ -64,5 +66,16 @@ public class DetailedActivity extends AppCompatActivity {
             retweet_icon.setImageDrawable(getResources().getDrawable(R.drawable.green_retweet));
         favorite_count.setText(String.valueOf(tweet.getFavoriteCount()));
         retweet_count.setText(String.valueOf(tweet.getRetweetCount()));
+
+        Media media = tweet.getMedia();
+        Media exMedia = tweet.getExtendedMedia();
+        if(media != null) {
+            Glide.with(this)
+                    .load(media.getMediaUrlHttps())
+                    .into(binding.tweetImage);
+            binding.tweetImage.setVisibility(View.VISIBLE);
+        } else {
+            binding.tweetImage.setVisibility(View.GONE);
+        }
     }
 }

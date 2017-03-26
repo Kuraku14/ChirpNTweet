@@ -99,22 +99,10 @@ public class TweetAdapter extends
             Media exMedia = tweet.getExtendedMedia();
             Log.d("Position", String.valueOf(position));
             if(media != null) {
-                Log.d("Media type", media.getType());
-                Log.d("Media url", media.getMediaUrlHttps());
-                Log.d("Media url https", media.getMediaUrl());
-
-                if (media.getType().equals("Video"))
-                    Log.d("Media video url", media.getVideoUrlHttps());
                 Glide.with(context)
                         .load(media.getMediaUrlHttps())
                         .into(holder.tweetImage);
-                if(exMedia !=null ) {
-                    Log.d("Ex Media type", exMedia.getType());
-                    Log.d("Ex Media url", exMedia.getMediaUrlHttps());
-                    Log.d("Ex Media url https", exMedia.getMediaUrl());
-                    if (exMedia.getType().equals("Video"))
-                        Log.d("Ex Media video url", exMedia.getVideoUrlHttps());
-                }
+                holder.tweetImage.setVisibility(View.VISIBLE);
             } else {
                 holder.tweetImage.setVisibility(View.GONE);
             }

@@ -37,6 +37,16 @@
                 </android.support.v7.widget.RecyclerView>
             </android.support.v4.widget.SwipeRefreshLayout>
 
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/progressBar"
+                android:visibility="gone" />
+
         </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton

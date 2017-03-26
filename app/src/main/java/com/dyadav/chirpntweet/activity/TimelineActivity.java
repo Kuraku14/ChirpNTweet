@@ -18,20 +18,28 @@ import android.view.View;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.adapter.TweetAdapter;
 import com.dyadav.chirpntweet.application.TwitterApplication;
+import com.dyadav.chirpntweet.data.TwitterDb;
 import com.dyadav.chirpntweet.databinding.ActivityTimelineBinding;
 import com.dyadav.chirpntweet.fragments.ComposeDialog;
 import com.dyadav.chirpntweet.modal.Tweet;
+import com.dyadav.chirpntweet.modal.Tweet_Table;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.EndlessRecyclerViewScrollListener;
 import com.dyadav.chirpntweet.utils.ItemClickSupport;
 import com.dyadav.chirpntweet.utils.NetworkUtility;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -44,6 +52,7 @@ public class TimelineActivity extends AppCompatActivity {
     LinearLayoutManager mLayoutManager;
     private ActivityTimelineBinding binding;
     private User user = null;
+    private boolean offlineData = false;
 
     private String TAG = "TimelineActivity";
 
@@ -171,23 +180,70 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void populateTimeline(final boolean fRequest, long id) {
 
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        if(!NetworkUtility.isOnline()) {
+            Snackbar.make(binding.cLayout, R.string.connection_error, Snackbar.LENGTH_LONG).show();
+            binding.progressBar.setVisibility(View.GONE);
+            //Show offline data
+            fetchOfflineTweets();
+            return;
+        }
+
         client.getHomeTimeline(fRequest, id, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d(TAG, String.valueOf(statusCode));
-                Log.d(TAG, response.toString());
                 if(fRequest)
                     mTweetList.clear();
-                mTweetList.addAll(Tweet.fromJSONArray(response));
+
+                ArrayList<Tweet> newTweet = Tweet.fromJSONArray(response);
+                mTweetList.addAll(newTweet);
+                addToDb(newTweet);
                 mAdapter.notifyDataSetChanged();
                 binding.swipeContainer.setRefreshing(false);
+                binding.progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
                 Snackbar.make(binding.cLayout, R.string.error_fetch, Snackbar.LENGTH_LONG).show();
+                //Show offline data
+                fetchOfflineTweets();
                 binding.swipeContainer.setRefreshing(false);
+                binding.progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void fetchOfflineTweets() {
+        if (!offlineData) {
+            List<Tweet> tweetsFromDb = SQLite.select().from(Tweet.class).orderBy(Tweet_Table.uid, false).queryList();
+            mTweetList.addAll(tweetsFromDb);
+            offlineData = true;
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    void addToDb(ArrayList<Tweet> newTweet){
+        FlowManager.getDatabase(TwitterDb.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<Tweet>() {
+                            @Override
+                            public void processModel(Tweet tweet, DatabaseWrapper wrapper) {
+                                tweet.save();
+                            }
+                        }).addAll(newTweet).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+
+                    }
+                }).build().execute();
     }
 }
