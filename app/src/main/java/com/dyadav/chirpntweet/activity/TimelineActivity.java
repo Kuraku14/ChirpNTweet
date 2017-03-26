@@ -69,11 +69,13 @@ public class TimelineActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.drawable.twitter_logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-
         mTweetList = new ArrayList<>();
         mAdapter = new TweetAdapter(this, mTweetList);
         binding.rView.setAdapter(mAdapter);
         binding.rView.setItemAnimator(new DefaultItemAnimator());
+
+        //Fetch logged in users info
+        fetchUserInfo();
 
         //Recylerview decorater
         RecyclerView.ItemDecoration itemDecoration =
@@ -131,32 +133,56 @@ public class TimelineActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ComposeDialog fDialog = new ComposeDialog();
-                if (user != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("userinfo", user);
-                    //Dialog listener
-                    fDialog.setFinishDialogListener(new ComposeDialog.ComposeTweetListener(){
-                        @Override
-                        public void onFinishDialog(Tweet tweet) {
-                            if (tweet != null) {
-                                mTweetList.add(0,tweet);
-                                mAdapter.notifyItemInserted(0);
-                                binding.rView.scrollToPosition(0);
-                            }
-                        }
-                    });
-                    fDialog.setArguments(bundle);
-                }
-                fDialog.show(TimelineActivity.this.getSupportFragmentManager(),"");
+                createComposeDialog(null);
             }
         });
 
-        //Fetch logged in users info
-        fetchUserInfo();
-
         //Fetch first page
         populateTimeline(true, 0);
+
+        //Show compose tweet with delay
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Check for implicit Intent
+                // Get intent, action and MIME type
+                Intent intent = getIntent();
+                String action = intent.getAction();
+                String type = intent.getType();
+                if (Intent.ACTION_SEND.equals(action) && type != null) {
+                    if ("text/plain".equals(type)) {
+                        createComposeDialog(intent.getStringExtra(Intent.EXTRA_SUBJECT) + " - " +
+                                intent.getStringExtra(Intent.EXTRA_TEXT));
+                    }
+                }
+            }
+        }, 1000);
+
+    }
+
+    private void createComposeDialog(String s) {
+        ComposeDialog fDialog = new ComposeDialog();
+        if (user != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("userinfo", user);
+            bundle.putString("intentinfo", s);
+            //Dialog listener
+            fDialog.setFinishDialogListener(new ComposeDialog.ComposeTweetListener(){
+                @Override
+                public void onFinishDialog(Tweet tweet) {
+                    if (tweet != null) {
+                        mTweetList.add(0,tweet);
+                        mAdapter.notifyItemInserted(0);
+                        binding.rView.scrollToPosition(0);
+                    }
+                }
+            });
+            fDialog.setArguments(bundle);
+            fDialog.show(TimelineActivity.this.getSupportFragmentManager(),"");
+        }
+
     }
 
     private void fetchUserInfo() {

@@ -86,6 +86,9 @@ public class ComposeDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String str = null;
+        User user;
+
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_dialog);
 
         binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()),
@@ -94,8 +97,8 @@ public class ComposeDialog extends DialogFragment {
         //Fetch logged in user info
         Bundle bundle = getArguments();
         if (bundle != null) {
-            User user = bundle.getParcelable("userinfo");
-
+            user = bundle.getParcelable("userinfo");
+            str = bundle.getString("intentinfo", null);
             Glide.with(getContext())
                     .load(user.getProfileImageURL())
                     .into(binding.profileImage);
@@ -108,7 +111,9 @@ public class ComposeDialog extends DialogFragment {
         sharedpreferences = getContext().getSharedPreferences(tweetDraft, Context.MODE_PRIVATE);
         String draft = sharedpreferences.getString(tweet, null);
 
-        if (draft != null)
+        if (str != null)
+            binding.tweetBody.setText(str);
+        else if (draft != null)
             binding.tweetBody.setText(draft);
 
         //Attach a listener to count tweet length
