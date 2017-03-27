@@ -85,37 +85,23 @@
             android:autoLink="all"
             android:linksClickable="true"/>
 
-        <FrameLayout android:id="@+id/imageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tweetBody"
-            android:layout_alignLeft="@+id/userName"
-            android:layout_alignStart="@+id/userName"
-            android:layout_gravity="center_horizontal|center_vertical" >
-
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="200dp"
+                android:layout_below="@+id/tweetBody"
+                android:layout_alignLeft="@+id/userName"
+                android:layout_alignStart="@+id/userName"
                 android:scaleType="fitXY"
                 android:background="@drawable/transparent_rounded_corner"
                 android:adjustViewBounds="true"
                 android:id="@+id/tweetImage"/>
-
-            <ImageButton
-                android:id="@+id/playBtn"
-                android:background="@android:color/transparent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/play" />
-        </FrameLayout>
 
         <include layout="@layout/multi_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/timeStamp"
             android:layout_toEndOf="@+id/timeStamp"
-            android:layout_below="@+id/imageLayout"
+            android:layout_below="@+id/tweetImage"
             android:layout_marginLeft="5dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
