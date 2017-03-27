@@ -57,7 +57,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<a href='https://www.dropbox.com/home?preview=Simple+Twitter+Client+Walkthrough.mp4'>Video Walkthrough on Dropbox</a>
+<a href='https://www.dropbox.com/s/ujdhiaoqmd17jl6/Simple%20Twitter%20Client%20Walkthrough.mp4?dl=0'>Video Walkthrough on Dropbox</a>
 
 ## Notes
 
