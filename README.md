@@ -57,7 +57,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://www.dropbox.com/home?preview=Simple+Twitter+Client+Walkthrough.mp4' title='Video Walkthrough' width='' alt='Video Walkthrough of ChirpNTweet' />
+<img src='https://www.dropbox.com/home?preview=Simple+Twitter+Client+Walkthrough.mp4' title='Video Walkthrough' width=' />
 
 ## Notes
 
