@@ -7,4 +7,7 @@
     <string name="reply">reply</string>
     <string name="reply_success">Tweet reply success</string>
     <string name="reply_failed">Tweet reply failed</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -75,12 +74,6 @@ public class TweetAdapter extends
 
         @BindView(R.id.tweetImage)
         ImageView tweetImage;
-
-        @BindView(R.id.imageLayout)
-        FrameLayout imageLayout;
-
-        @BindView(R.id.playBtn)
-        ImageView playBtn;
 
         public MyViewHolder(View view) {
             super(view);

@@ -18,9 +18,6 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-
-        //Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Carrington.ttf");
-        //binding.appname.setTypeface(font);
     }
 
     public void loginToRest(View view) {
@@ -29,7 +26,7 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 
     @Override
     public void onLoginSuccess() {
-        Intent i = new Intent(this, TimelineActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }
