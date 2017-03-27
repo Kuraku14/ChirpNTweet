@@ -47,11 +47,11 @@ public class Tweet extends BaseModel implements Parcelable {
     @Column
     private int messageCount;
 
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(saveForeignKeyModel = true)
     @Column
     private Media media;
 
-    @ForeignKey(saveForeignKeyModel = false)
+    @ForeignKey(saveForeignKeyModel = true)
     @Column
     private Media extendedMedia;
 

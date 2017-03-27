@@ -13,6 +13,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.dyadav.chirpntweet.R;
@@ -278,5 +281,22 @@ public class TimelineActivity extends AppCompatActivity {
         super.onResume();
         //Fetch again to refersh screen
         populateTimeline(true, 0);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_scroll_to_top:
+                binding.rView.smoothScrollToPosition(0);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

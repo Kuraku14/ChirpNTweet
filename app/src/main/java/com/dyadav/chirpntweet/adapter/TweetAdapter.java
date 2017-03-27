@@ -3,10 +3,10 @@ package com.dyadav.chirpntweet.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,6 +76,12 @@ public class TweetAdapter extends
         @BindView(R.id.tweetImage)
         ImageView tweetImage;
 
+        @BindView(R.id.imageLayout)
+        FrameLayout imageLayout;
+
+        @BindView(R.id.playBtn)
+        ImageView playBtn;
+
         public MyViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -101,19 +107,31 @@ public class TweetAdapter extends
 
         if (tweet != null) {
             Glide.with(context)
-                    .load(tweet.getUser().getProfileImageURL())
-                    .into(holder.userProfileImage);
+                .load(tweet.getUser().getProfileImageURL())
+                .into(holder.userProfileImage);
 
             Media media = tweet.getMedia();
             Media exMedia = tweet.getExtendedMedia();
-            Log.d("Position", String.valueOf(position));
+
             if(media != null) {
-                Glide.with(context)
-                        .load(media.getMediaUrlHttps())
-                        .into(holder.tweetImage);
+                holder.imageLayout.setVisibility(View.VISIBLE);
                 holder.tweetImage.setVisibility(View.VISIBLE);
+                holder.tweetImage.setImageResource(0);
+                if(exMedia != null && exMedia.getType().equalsIgnoreCase("Video")){
+                    holder.playBtn.setVisibility(View.VISIBLE);
+                    Glide.with(context)
+                            .load(exMedia.getMediaUrlHttps())
+                            .into(holder.tweetImage);
+                }else{
+                    holder.playBtn.setVisibility(View.GONE);
+                    Glide.with(context)
+                            .load(media.getMediaUrlHttps())
+                            .into(holder.tweetImage);
+                }
             } else {
+                holder.imageLayout.setVisibility(View.GONE);
                 holder.tweetImage.setVisibility(View.GONE);
+                holder.playBtn.setVisibility(View.GONE);
             }
 
 
@@ -155,6 +173,13 @@ public class TweetAdapter extends
                     Intent intent = new Intent(context, DetailedActivity.class);
                     intent.putExtra("tweet", tweet);
                     context.startActivity(intent);
+                }
+            });
+
+            holder.playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
                 }
             });
         }
