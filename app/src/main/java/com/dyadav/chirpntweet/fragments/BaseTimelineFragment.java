@@ -246,7 +246,5 @@ public abstract class BaseTimelineFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //Fetch again to refresh screen
-        populateTimeline(true, 0);
     }
 }

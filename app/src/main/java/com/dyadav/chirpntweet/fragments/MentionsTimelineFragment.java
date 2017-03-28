@@ -4,6 +4,6 @@ public class MentionsTimelineFragment extends BaseTimelineFragment{
 
     @Override
     protected void fetchTimeline() {
-        client.getMentionsTimeline(fRequest, maxId, handler);
+        client.getMentionsTimeline(fRequest, maxId - 1, handler);
     }
 }

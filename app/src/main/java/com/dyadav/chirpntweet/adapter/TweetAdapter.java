@@ -107,6 +107,7 @@ public class TweetAdapter extends
             Media exMedia = tweet.getExtendedMedia();
 
             if(media != null) {
+                holder.tweetImage.setVisibility(View.VISIBLE);
                  Glide.with(context)
                         .load(media.getMediaUrlHttps())
                         .into(holder.tweetImage);
