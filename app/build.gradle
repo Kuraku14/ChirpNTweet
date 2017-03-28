@@ -39,8 +39,6 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
     compile 'com.android.support:recyclerview-v7:25.3.0'
