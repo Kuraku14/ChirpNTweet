@@ -26,7 +26,7 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 
     @Override
     public void onLoginSuccess() {
-        Intent i = new Intent(this, MainActivity.class);
+        Intent i = new Intent(this, TimelineActivity.class);
         startActivity(i);
         finish();
     }

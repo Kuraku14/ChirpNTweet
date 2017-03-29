@@ -1,48 +1,67 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true" >
 
-            <android.support.design.widget.AppBarLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
+                <android.support.design.widget.AppBarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:titleTextColor="@android:color/white"
-                    app:layout_scrollFlags="scroll|enterAlways"
-                    app:titleMarginStart="32dp"
-                    app:contentInsetLeft="20dp"
-                    app:contentInsetStart="20dp" />
+                    android:layout_height="wrap_content">
 
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tabs"
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?attr/colorPrimary"
+                        app:titleTextColor="@android:color/white"
+                        app:layout_scrollFlags="scroll|enterAlways"
+                        app:titleMarginStart="32dp"
+                        app:contentInsetLeft="20dp"
+                        app:contentInsetStart="20dp" />
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        app:tabIndicatorColor="@color/colorPrimary"
+                        app:tabSelectedTextColor="@color/colorPrimary"
+                        app:tabTextColor="@color/colorPrimary"
+                        app:tabMode="fixed"
+                        app:tabGravity="fill"/>
+
+                </android.support.design.widget.AppBarLayout>
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    app:tabIndicatorColor="@color/colorPrimary"
-                    app:tabSelectedTextColor="@color/colorPrimary"
-                    app:tabTextColor="@color/colorPrimary"
-                    app:tabMode="fixed"
-                    app:tabGravity="fill"/>
+                    android:layout_height="match_parent" />
+            </LinearLayout>
 
-            </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-
-    </android.support.design.widget.CoordinatorLayout>
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/navigation_drawer_head"
+            app:menu="@menu/navigation_drawer" />
+    </android.support.v4.widget.DrawerLayout>
 </layout>
