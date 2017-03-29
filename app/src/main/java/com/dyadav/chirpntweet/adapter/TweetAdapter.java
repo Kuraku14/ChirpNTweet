@@ -108,7 +108,7 @@ public class TweetAdapter extends
 
             if(media != null) {
                 holder.tweetImage.setVisibility(View.VISIBLE);
-                 Glide.with(context)
+                Glide.with(context)
                         .load(media.getMediaUrlHttps())
                         .into(holder.tweetImage);
             } else {

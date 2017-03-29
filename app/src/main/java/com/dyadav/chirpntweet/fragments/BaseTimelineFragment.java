@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -92,8 +91,9 @@ public abstract class BaseTimelineFragment extends Fragment {
         binding.rView.setAdapter(mAdapter);
         binding.rView.setItemAnimator(new DefaultItemAnimator());
 
-        //Fetch logged in users info
-        fetchUserInfo();
+        //Fetch user info
+        Bundle args = getArguments();
+        user = args.getParcelable("user");
 
         //Recylerview decorater
         RecyclerView.ItemDecoration itemDecoration =
@@ -136,8 +136,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         });
 
         // Attach FAB listener
-        FloatingActionButton fab = binding.fab;
-        fab.setOnClickListener(view -> createComposeDialog(null));
+        binding.fab.setOnClickListener(view -> createComposeDialog(null));
 
         //Fetch first page
         populateTimeline(true, 0);
@@ -180,20 +179,6 @@ public abstract class BaseTimelineFragment extends Fragment {
             fDialog.show(getActivity().getSupportFragmentManager(), "");
         }
 
-    }
-
-    private void fetchUserInfo() {
-        client.getAccountInfo(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJson(response);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                //Snackbar.make(binding.cLayout, R.string.user_info_error, Snackbar.LENGTH_LONG).show();
-            }
-        });
     }
 
     private long getMaxId() {

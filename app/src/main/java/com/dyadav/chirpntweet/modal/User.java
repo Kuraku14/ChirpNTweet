@@ -2,6 +2,7 @@ package com.dyadav.chirpntweet.modal;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.dyadav.chirpntweet.data.TwitterDb;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -30,6 +31,9 @@ public class User extends BaseModel implements Parcelable{
 
     @Column
     private boolean verified;
+
+    @Column
+    private String coverImageURL;
 
     public User() {
     }
@@ -78,14 +82,24 @@ public class User extends BaseModel implements Parcelable{
         this.verified = verified;
     }
 
+    public String getCoverImageURL() {
+        return coverImageURL;
+    }
+
+    public void setCoverImageURL(String coverImageURL) {
+        this.coverImageURL = coverImageURL;
+    }
+
     public static User fromJson(JSONObject jsonObject) {
         User user = new User();
-
+        Log.d("user", jsonObject.toString());
         try {
             user.name = jsonObject.getString("name");
             user.uid = jsonObject.getLong("id");
             user.screenName = jsonObject.getString("screen_name");
-            user.profileImageURL = jsonObject.getString("profile_image_url");
+            String image_url = jsonObject.getString("profile_image_url");
+            user.profileImageURL = image_url.replace("_normal", "");
+            user.coverImageURL = jsonObject.getString("profile_banner_url");
             user.verified = jsonObject.getBoolean("verified");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -104,6 +118,7 @@ public class User extends BaseModel implements Parcelable{
         parcel.writeLong(uid);
         parcel.writeString(screenName);
         parcel.writeString(profileImageURL);
+        parcel.writeString(coverImageURL);
         parcel.writeByte((byte) (verified ? 1 : 0));
     }
 
@@ -112,6 +127,7 @@ public class User extends BaseModel implements Parcelable{
         uid = in.readLong();
         screenName = in.readString();
         profileImageURL = in.readString();
+        coverImageURL = in.readString();
         verified = in.readByte() != 0;
     }
 

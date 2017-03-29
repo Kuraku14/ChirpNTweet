@@ -16,7 +16,7 @@
         <menu>
             <item
                 android:id="@+id/signout"
-                android:title="@string/signout" />
+                android:title="Signout" />
         </menu>
     </item>
 

@@ -31,13 +31,11 @@ def dbflow_version = "4.0.0-beta5"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
@@ -50,4 +48,5 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
 }

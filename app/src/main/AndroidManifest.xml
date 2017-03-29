@@ -43,7 +43,9 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.Baseactivity"></activity>
+        <activity android:name=".activity.Baseactivity" />
+        <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.DirectMessages"></activity>
     </application>
 
 </manifest>
