@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.databinding.ActivityDetailedBinding;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -84,6 +86,8 @@ public class DetailedActivity extends AppCompatActivity {
         if(media != null) {
             Glide.with(this)
                     .load(media.getMediaUrlHttps())
+                    .bitmapTransform(new RoundedCornersTransformation(this,20,0))
+                    .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                     .into(binding.tweetImage);
             binding.tweetImage.setVisibility(View.VISIBLE);
         } else {

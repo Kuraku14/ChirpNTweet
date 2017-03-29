@@ -119,9 +119,9 @@
 
             <ImageView
                 android:layout_width="wrap_content"
+                android:layout_margin="20dp"
                 android:layout_height="200dp"
                 android:scaleType="fitXY"
-                android:background="@drawable/transparent_rounded_corner"
                 android:adjustViewBounds="true"
                 android:id="@+id/tweetImage"
                 android:layout_below="@+id/tweetBody"

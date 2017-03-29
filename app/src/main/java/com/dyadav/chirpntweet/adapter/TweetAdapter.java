@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.activity.DetailedActivity;
 import com.dyadav.chirpntweet.application.TwitterApplication;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetAdapter extends
         RecyclerView.Adapter<TweetAdapter.MyViewHolder> {
@@ -110,6 +112,8 @@ public class TweetAdapter extends
                 holder.tweetImage.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(media.getMediaUrlHttps())
+                        .bitmapTransform(new RoundedCornersTransformation(context,20,0))
+                        .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                         .into(holder.tweetImage);
             } else {
                 holder.tweetImage.setVisibility(View.GONE);

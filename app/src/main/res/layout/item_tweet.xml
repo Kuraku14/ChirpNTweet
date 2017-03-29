@@ -92,7 +92,6 @@
                 android:layout_alignLeft="@+id/userName"
                 android:layout_alignStart="@+id/userName"
                 android:scaleType="fitXY"
-                android:background="@drawable/transparent_rounded_corner"
                 android:adjustViewBounds="true"
                 android:id="@+id/tweetImage"/>
 
