@@ -1,25 +1,22 @@
 package com.dyadav.chirpntweet.activity;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.application.TwitterApplication;
+import com.dyadav.chirpntweet.databinding.ActivityMainBinding;
 import com.dyadav.chirpntweet.fragments.HomeTimelineFragment;
 import com.dyadav.chirpntweet.fragments.MentionsTimelineFragment;
 import com.dyadav.chirpntweet.modal.User;
@@ -34,51 +31,44 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class TimelineActivity extends Baseactivity {
+public class TimelineActivity extends BaseActivity {
 
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Toolbar toolbar;
     private User user;
-    private NavigationView navigationView;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         //Fetch User info
         fetchUserInfo();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
 
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+        setupViewPager(binding.viewpager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        binding.tabs.setupWithViewPager(binding.viewpager);
 
         setupNavigationDrawer();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
         setUpNavigationView();
     }
 
     private void setupNavigationDrawer() {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
-                mDrawerLayout,
-                toolbar,
+                binding.drawerLayout,
+                binding.toolbar,
                 R.string.app_name,
                 R.string.app_name
         );
 
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
+        /* mDrawerToggle.setDrawerIndicatorEnabled(false);
         mDrawerToggle.getDrawerArrowDrawable();
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.messages);
         mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -87,6 +77,19 @@ public class TimelineActivity extends Baseactivity {
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
+        */
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle
+        // If it returns true, then it has handled
+        // the nav drawer indicator touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -96,22 +99,33 @@ public class TimelineActivity extends Baseactivity {
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
     private void setUpNavigationView() {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.profile:
-                        startActivity(new Intent(TimelineActivity.this, ProfileActivity.class));
-                        mDrawerLayout.closeDrawers();
+                        //Send user info
+                        Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
+                        i.putExtra("user", user);
+                        startActivity(i);
+                        binding.drawerLayout.closeDrawers();
                         return true;
 
                     case R.id.messages:
                         startActivity(new Intent(TimelineActivity.this, DirectMessages.class));
-                        mDrawerLayout.closeDrawers();
+                        binding.drawerLayout.closeDrawers();
                         return true;
 
-                    case R.id.signout:
+                    case R.id.lists:
+                    case R.id.connect:
+                    case R.id.helpCenter:
                         return true;
                 }
 

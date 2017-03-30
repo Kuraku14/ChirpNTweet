@@ -14,4 +14,7 @@
     <string name="profile">Profile</string>
     <string name="messages">Messages</string>
     <string name="other">Other</string>
+    <string name="help_center">Help Center</string>
+    <string name="lists">lists</string>
+    <string name="connect">Connect</string>
 </resources>

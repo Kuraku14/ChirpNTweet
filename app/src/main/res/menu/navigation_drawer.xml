@@ -10,14 +10,22 @@
             android:id="@+id/messages"
             android:icon="@drawable/messages"
             android:title="@string/messages" />
+
+        <item
+            android:id="@+id/lists"
+            android:icon="@drawable/lists"
+            android:title="@string/lists" />
+
+        <item
+            android:id="@+id/connect"
+            android:icon="@drawable/connect"
+            android:title="@string/connect" />
     </group>
 
-    <item android:title="@string/other">
-        <menu>
-            <item
-                android:id="@+id/signout"
-                android:title="Signout" />
-        </menu>
-    </item>
+    <group>
+        <item
+            android:id="@+id/helpCenter"
+            android:title="@string/help_center" />
+    </group>
 
 </menu>
