@@ -93,7 +93,7 @@ public class TimelineActivity extends BaseActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        TimelinePagerAdapter adapter = new TimelinePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new HomeTimelineFragment(), "HOME");
         adapter.addFragment(new MentionsTimelineFragment(), "MENTIONS");
         viewPager.setAdapter(adapter);
@@ -177,11 +177,11 @@ public class TimelineActivity extends BaseActivity {
         });
     }
 
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
+    private class TimelinePagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        ViewPagerAdapter(FragmentManager manager) {
+        TimelinePagerAdapter(FragmentManager manager) {
             super(manager);
         }
 

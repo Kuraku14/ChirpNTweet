@@ -5,6 +5,6 @@ public class UserTimelineFragment extends BaseTimelineFragment{
 
     @Override
     protected void fetchTimeline() {
-        client.getMentionsTimeline(fRequest, maxId - 1, handler);
+        client.getUsersTimeline(fRequest, maxId - 1, user.getScreenName(), handler);
     }
 }
