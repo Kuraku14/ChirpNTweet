@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.activity.DetailedActivity;
+import com.dyadav.chirpntweet.activity.ProfileActivity;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.modal.Media;
 import com.dyadav.chirpntweet.modal.Tweet;
@@ -138,12 +139,13 @@ public class TweetAdapter extends
             holder.favCount.setText(String.valueOf(tweet.getFavoriteCount()));
             holder.retweetCount.setText(String.valueOf(tweet.getRetweetCount()));
 
-            holder.favorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markFavorite(tweet.isFavorited(), tweet.getUid(), position);
-                }
+            holder.userProfileImage.setOnClickListener(v -> {
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", tweet.getUser());
+                context.startActivity(intent);
             });
+
+            holder.favorite.setOnClickListener(v -> markFavorite(tweet.isFavorited(), tweet.getUid(), position));
 
             holder.retweet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,13 +154,10 @@ public class TweetAdapter extends
                 }
             });
 
-            holder.reply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, DetailedActivity.class);
-                    intent.putExtra("tweet", tweet);
-                    context.startActivity(intent);
-                }
+            holder.reply.setOnClickListener(v -> {
+                Intent intent = new Intent(context, DetailedActivity.class);
+                intent.putExtra("tweet", tweet);
+                context.startActivity(intent);
             });
         }
     }

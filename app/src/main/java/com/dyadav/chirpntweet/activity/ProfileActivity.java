@@ -45,10 +45,19 @@ public class ProfileActivity extends AppCompatActivity {
                 .into(binding.backdrop);
 
         //Profile image
-        //Glide.with(this)
-        //        .load(user.getProfileImageURL())
-        //        .bitmapTransform(new CropCircleTransformation(TimelineActivity.this))
-        //        .into(profile);
+        Glide.with(this)
+                .load(user.getProfileImageURL())
+                .into(binding.profileImage);
+
+        binding.followerCount.setText(user.getFollowerCount() + " FOLLOWERS");
+        binding.followingCount.setText(user.getFollowingCount() + " FOLLOWING");
+        binding.userName.setText(user.getName());
+        binding.screenName.setText(user.getScreenName());
+        if (null != user.getDescription())
+            binding.description.setText(user.getDescription());
+
+        if (null != user.getLocation())
+            binding.location.setText(user.getLocation());
 
         setupViewPager(binding.viewpager);
         binding.tabs.setupWithViewPager(binding.viewpager);

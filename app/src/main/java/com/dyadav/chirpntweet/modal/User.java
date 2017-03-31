@@ -35,6 +35,21 @@ public class User extends BaseModel implements Parcelable{
     @Column
     private String coverImageURL;
 
+    @Column
+    private String followerCount;
+
+    @Column
+    private String followingCount;
+
+    @Column
+    private String description;
+
+    @Column
+    private String location;
+
+    @Column
+    private String url;
+
     public User() {
     }
 
@@ -90,6 +105,46 @@ public class User extends BaseModel implements Parcelable{
         this.coverImageURL = coverImageURL;
     }
 
+    public String getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(String followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public String getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(String followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public static User fromJson(JSONObject jsonObject) {
         User user = new User();
         Log.d("user", jsonObject.toString());
@@ -101,6 +156,11 @@ public class User extends BaseModel implements Parcelable{
             user.profileImageURL = image_url.replace("_normal", "");
             user.coverImageURL = jsonObject.getString("profile_banner_url");
             user.verified = jsonObject.getBoolean("verified");
+            user.followingCount = jsonObject.getString("friends_count");
+            user.followerCount = jsonObject.getString("followers_count");
+            user.location = jsonObject.getString("location");
+            user.description = jsonObject.getString("description");
+            user.url = jsonObject.getString("display_url");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -120,6 +180,11 @@ public class User extends BaseModel implements Parcelable{
         parcel.writeString(profileImageURL);
         parcel.writeString(coverImageURL);
         parcel.writeByte((byte) (verified ? 1 : 0));
+        parcel.writeString(followingCount);
+        parcel.writeString(followerCount);
+        parcel.writeString(location);
+        parcel.writeString(description);
+        parcel.writeString(url);
     }
 
     protected User(Parcel in) {
@@ -129,6 +194,11 @@ public class User extends BaseModel implements Parcelable{
         profileImageURL = in.readString();
         coverImageURL = in.readString();
         verified = in.readByte() != 0;
+        followingCount = in.readString();
+        followerCount = in.readString();
+        location = in.readString();
+        description = in.readString();
+        url = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
