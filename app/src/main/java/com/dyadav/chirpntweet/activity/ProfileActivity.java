@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
@@ -61,6 +62,22 @@ public class ProfileActivity extends AppCompatActivity {
 
         setupViewPager(binding.viewpager);
         binding.tabs.setupWithViewPager(binding.viewpager);
+
+        binding.followerCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, FollowActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.followingCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, FollowActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

@@ -85,15 +85,15 @@
             android:autoLink="all"
             android:linksClickable="true"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="200dp"
-                android:layout_below="@+id/tweetBody"
-                android:layout_alignLeft="@+id/userName"
-                android:layout_alignStart="@+id/userName"
-                android:scaleType="fitXY"
-                android:adjustViewBounds="true"
-                android:id="@+id/tweetImage"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_below="@+id/tweetBody"
+            android:layout_alignLeft="@+id/userName"
+            android:layout_alignStart="@+id/userName"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:id="@+id/tweetImage"/>
 
         <include layout="@layout/multi_actions"
             android:layout_width="wrap_content"

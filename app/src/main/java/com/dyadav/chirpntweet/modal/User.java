@@ -47,9 +47,6 @@ public class User extends BaseModel implements Parcelable{
     @Column
     private String location;
 
-    @Column
-    private String url;
-
     public User() {
     }
 
@@ -137,14 +134,6 @@ public class User extends BaseModel implements Parcelable{
         this.location = location;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public static User fromJson(JSONObject jsonObject) {
         User user = new User();
         Log.d("user", jsonObject.toString());
@@ -160,7 +149,6 @@ public class User extends BaseModel implements Parcelable{
             user.followerCount = jsonObject.getString("followers_count");
             user.location = jsonObject.getString("location");
             user.description = jsonObject.getString("description");
-            user.url = jsonObject.getString("display_url");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -184,7 +172,6 @@ public class User extends BaseModel implements Parcelable{
         parcel.writeString(followerCount);
         parcel.writeString(location);
         parcel.writeString(description);
-        parcel.writeString(url);
     }
 
     protected User(Parcel in) {
@@ -198,7 +185,6 @@ public class User extends BaseModel implements Parcelable{
         followerCount = in.readString();
         location = in.readString();
         description = in.readString();
-        url = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
