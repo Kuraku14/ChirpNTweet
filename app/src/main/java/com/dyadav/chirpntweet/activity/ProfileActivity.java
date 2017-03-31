@@ -36,7 +36,8 @@ public class ProfileActivity extends AppCompatActivity {
         user = intent.getParcelableExtra("user");
 
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayUseLogoEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         //Backdrop
         Glide.with(this)
