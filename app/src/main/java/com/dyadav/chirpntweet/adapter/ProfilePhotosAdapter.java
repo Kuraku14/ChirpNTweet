@@ -51,8 +51,10 @@ public class ProfilePhotosAdapter  extends
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Tweet tweet = userPhotos.get(position);
 
-        if (tweet.getMedia() != null)
-            Glide.with(context).load(tweet.getMedia().getMediaUrlHttps())
+        if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
+                !tweet.getEntities().getMedia().isEmpty()  &&
+                tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null)
+            Glide.with(context).load(tweet.getEntities().getMedia().get(0).getMediaUrlHttps())
                     .bitmapTransform(new RoundedCornersTransformation(context,20,0))
                     .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                     .into(holder.userPhoto);

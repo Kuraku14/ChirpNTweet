@@ -2,49 +2,67 @@ package com.dyadav.chirpntweet.modal;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.dyadav.chirpntweet.data.TwitterDb;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 @Table(database = TwitterDb.class)
-public class User extends BaseModel implements Parcelable{
+public class User extends BaseModel implements Parcelable {
 
     @Column
+    @SerializedName("name")
+    @Expose
     private String name;
 
     @Column
     @PrimaryKey
+    @SerializedName("id")
+    @Expose
     private long uid;
 
     @Column
+    @SerializedName("screen_name")
+    @Expose
     private String screenName;
 
     @Column
+    @SerializedName("profile_image_url")
+    @Expose
     private String profileImageURL;
 
     @Column
+    @SerializedName("verified")
+    @Expose
     private boolean verified;
 
     @Column
+    @SerializedName("profile_banner_url")
+    @Expose
     private String coverImageURL;
 
     @Column
+    @SerializedName("followers_count")
+    @Expose
     private String followerCount;
 
     @Column
+    @SerializedName("friends_count")
+    @Expose
     private String followingCount;
 
     @Column
+    @SerializedName("description")
+    @Expose
     private String description;
 
     @Column
+    @SerializedName("location")
+    @Expose
     private String location;
 
     public User() {
@@ -67,7 +85,7 @@ public class User extends BaseModel implements Parcelable{
     }
 
     public String getProfileImageURL() {
-        return profileImageURL;
+        return profileImageURL.replace("_normal", "");
     }
 
     public boolean getVerified() {
@@ -86,9 +104,7 @@ public class User extends BaseModel implements Parcelable{
         this.screenName = screenName;
     }
 
-    public void setProfileImageURL(String profileImageURL) {
-        this.profileImageURL = profileImageURL;
-    }
+    public void setProfileImageURL(String profileImageURL) { this.profileImageURL = profileImageURL;}
 
     public void setVerified(boolean verified) {
         this.verified = verified;
@@ -132,27 +148,6 @@ public class User extends BaseModel implements Parcelable{
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public static User fromJson(JSONObject jsonObject) {
-        User user = new User();
-        Log.d("user", jsonObject.toString());
-        try {
-            user.name = jsonObject.getString("name");
-            user.uid = jsonObject.getLong("id");
-            user.screenName = jsonObject.getString("screen_name");
-            String image_url = jsonObject.getString("profile_image_url");
-            user.profileImageURL = image_url.replace("_normal", "");
-            user.coverImageURL = jsonObject.getString("profile_banner_url");
-            user.verified = jsonObject.getBoolean("verified");
-            user.followingCount = jsonObject.getString("friends_count");
-            user.followerCount = jsonObject.getString("followers_count");
-            user.location = jsonObject.getString("location");
-            user.description = jsonObject.getString("description");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return user;
     }
 
     @Override

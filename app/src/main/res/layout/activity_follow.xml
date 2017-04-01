@@ -6,13 +6,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/white"
+            android:fitsSystemWindows="true" />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeContainer"
-            android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_below="@+id/toolbar">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvFollowers"
                 android:padding="10dp"

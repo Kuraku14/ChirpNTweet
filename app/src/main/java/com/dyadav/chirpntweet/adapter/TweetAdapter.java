@@ -16,10 +16,10 @@ import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.activity.DetailedActivity;
 import com.dyadav.chirpntweet.activity.ProfileActivity;
 import com.dyadav.chirpntweet.application.TwitterApplication;
-import com.dyadav.chirpntweet.modal.Media;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -106,13 +106,13 @@ public class TweetAdapter extends
                 .load(tweet.getUser().getProfileImageURL())
                 .into(holder.userProfileImage);
 
-            Media media = tweet.getMedia();
-            Media exMedia = tweet.getExtendedMedia();
-
-            if(media != null) {
+            holder.tweetImage.setImageResource(0);
+            if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
+                    !tweet.getEntities().getMedia().isEmpty()  &&
+                    tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null) {
                 holder.tweetImage.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(media.getMediaUrlHttps())
+                        .load(tweet.getEntities().getMedia().get(0).getMediaUrlHttps())
                         .bitmapTransform(new RoundedCornersTransformation(context,20,0))
                         .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                         .into(holder.tweetImage);
@@ -120,13 +120,16 @@ public class TweetAdapter extends
                 holder.tweetImage.setVisibility(View.GONE);
             }
 
-
             holder.userName.setText(tweet.getUser().getName());
             holder.screenName.setText("@" + tweet.getUser().getScreenName());
             holder.tweetBody.setText(tweet.getBody());
             holder.timeStamp.setText(DateUtility.getRelativeTimeAgo(tweet.getCreatedAt()));
-            if(tweet.getUser().getVerified())
+            if(tweet.getUser().getVerified()) {
                 holder.verifiedSymbol.setImageDrawable(context.getResources().getDrawable(R.drawable.verified));
+                holder.verifiedSymbol.setVisibility(View.VISIBLE);
+            } else {
+                holder.verifiedSymbol.setVisibility(View.GONE);
+            }
             if(tweet.getFavorited())
                 holder.favorite.setImageDrawable(context.getResources().getDrawable(R.drawable.red_heart));
             else
@@ -173,8 +176,8 @@ public class TweetAdapter extends
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    //JSONObject jsonObject = response.getJSONObject(0);
-                    Tweet tweet = Tweet.fromJson(response);
+                    Gson gson = new Gson();
+                    Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                     tweetList.set(position, tweet);
                     notifyDataSetChanged();
                 } catch (Exception e) {
@@ -194,8 +197,8 @@ public class TweetAdapter extends
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    //JSONObject jsonObject = response.getJSONObject(0);
-                    Tweet tweet = Tweet.fromJson(response);
+                    Gson gson = new Gson();
+                    Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                     tweetList.set(position, tweet);
                     notifyDataSetChanged();
                 } catch (Exception e) {

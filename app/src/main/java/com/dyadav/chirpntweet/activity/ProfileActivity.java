@@ -84,7 +84,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-
     private void setupViewPager(ViewPager viewPager) {
         ProfilePagerAdapter adapter = new ProfilePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new UserTimelineFragment(), "TWEETS");

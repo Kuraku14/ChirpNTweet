@@ -4,64 +4,76 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.dyadav.chirpntweet.data.TwitterDb;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 @Table(database = TwitterDb.class)
 public class Tweet extends BaseModel implements Parcelable {
     @Column
+    @SerializedName("text")
+    @Expose
     private String body;
 
     @Column
     @PrimaryKey
+    @SerializedName("id")
+    @Expose
     private long uid;
 
     @Column
+    @SerializedName("created_at")
+    @Expose
     private String createdAt;
 
     @ForeignKey(saveForeignKeyModel = true)
     @Column
+    @SerializedName("user")
+    @Expose
     private User user;
 
     @Column
+    @SerializedName("retweet_count")
+    @Expose
     private int retweetCount;
 
     @Column
+    @SerializedName("favorite_count")
+    @Expose
     private int favoriteCount;
 
     @Column
+    @SerializedName("retweeted")
+    @Expose
     private boolean isRetweeted;
 
     @Column
+    @SerializedName("favorited")
+    @Expose
     private boolean isFavorited;
 
     @Column
+    @SerializedName("")
+    @Expose
     private int messageCount;
 
-    @ForeignKey(saveForeignKeyModel = true)
-    @Column
-    private Media media;
+    @SerializedName("entities")
+    @Expose
+    private Entities entities;
 
-    @ForeignKey(saveForeignKeyModel = true)
-    @Column
-    private Media extendedMedia;
+    @SerializedName("extended_entities")
+    @Expose
+    private ExtendedEntities extendedEntities;
 
     public String getBody() {
         return body;
     }
 
-    public long getUid() {
-        return uid;
-    }
+    public long getUid() { return uid; }
 
     public String getCreatedAt() {
         return createdAt;
@@ -89,14 +101,6 @@ public class Tweet extends BaseModel implements Parcelable {
 
     public int getMessageCount() {
         return messageCount;
-    }
-
-    public Media getMedia() {
-        return media;
-    }
-
-    public Media getExtendedMedia() {
-        return extendedMedia;
     }
 
     public boolean isRetweeted() {
@@ -143,66 +147,15 @@ public class Tweet extends BaseModel implements Parcelable {
         this.messageCount = messageCount;
     }
 
-    public void setMedia(Media media) {
-        this.media = media;
-    }
+    public Entities getEntities() { return entities; }
 
-    public void setExtendedMedia(Media extendedMedia) {
-        this.extendedMedia = extendedMedia;
-    }
+    public void setEntities(Entities entities) { this.entities = entities; }
 
-    public Tweet() {}
+    public ExtendedEntities getExtendedEntities() { return extendedEntities; }
 
-    public static Tweet fromJson(JSONObject jObject){
-        Tweet tweet = new Tweet();
+    public void setExtendedEntities(ExtendedEntities extendedEntities) { this.extendedEntities = extendedEntities; }
 
-        try {
-            tweet.body = jObject.getString("text");
-            tweet.uid = jObject.getLong("id");
-            tweet.createdAt = jObject.getString("created_at");
-            tweet.user = User.fromJson(jObject.getJSONObject("user"));
-            tweet.favoriteCount = jObject.getInt("favorite_count");
-            tweet.retweetCount = jObject.getInt("retweet_count");
-            if(jObject.has("retweeted"))
-                tweet.isRetweeted = jObject.getBoolean("retweeted");
-            if(jObject.has("favorited"))
-                tweet.isFavorited = jObject.getBoolean("favorited");
-            //Get Media/Extended Media
-            JSONObject mediaObj = jObject.getJSONObject("entities");
-            if(mediaObj.has("media")) {
-                JSONArray mediaArray = mediaObj.getJSONArray("media");
-                tweet.media = Media.fromJson(mediaArray.getJSONObject(0));
-            }
-
-            if(jObject.has("extended_entities")) {
-                JSONObject extMediaObj = jObject.getJSONObject("extended_entities");
-                if(extMediaObj.has("media")) {
-                    JSONArray extendedMediaArray = extMediaObj.getJSONArray("media");
-                    tweet.extendedMedia = Media.fromJson(extendedMediaArray.getJSONObject(0));
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return tweet;
-    }
-
-    public static ArrayList<Tweet> fromJSONArray(JSONArray response) {
-        ArrayList<Tweet> tweets = new ArrayList<>();
-
-        for (int i = 0; i< response.length(); i++) {
-            try {
-                JSONObject object = response.getJSONObject(i);
-                Tweet tweet = Tweet.fromJson(object);
-                if (tweet != null)
-                    tweets.add(tweet);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                continue;
-            }
-        }
-        return tweets;
+    public Tweet() {
     }
 
     @Override
@@ -219,8 +172,8 @@ public class Tweet extends BaseModel implements Parcelable {
         parcel.writeInt(retweetCount);
         parcel.writeInt(favoriteCount);
         parcel.writeInt(messageCount);
-        parcel.writeParcelable(media, i);
-        parcel.writeParcelable(extendedMedia, i);
+        parcel.writeParcelable(entities, i);
+        parcel.writeParcelable(extendedEntities, i);
         parcel.writeByte((byte) (isRetweeted ? 1 : 0));
         parcel.writeByte((byte) (isFavorited ? 1 : 0));
     }
@@ -233,8 +186,8 @@ public class Tweet extends BaseModel implements Parcelable {
         retweetCount = in.readInt();
         favoriteCount = in.readInt();
         messageCount = in.readInt();
-        media = in.readParcelable(User.class.getClassLoader());
-        extendedMedia = in.readParcelable(User.class.getClassLoader());
+        entities = in.readParcelable(User.class.getClassLoader());
+        extendedEntities = in.readParcelable(User.class.getClassLoader());
         isRetweeted = in.readByte() != 0;
         isFavorited = in.readByte() != 0;
     }

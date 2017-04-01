@@ -23,6 +23,7 @@ import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.KeyboardUtility;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -206,7 +207,8 @@ public class ComposeDialog extends DialogFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 //Send the data back to HomeTimeline to be added manually
-                Tweet tweet = Tweet.fromJson(response);
+                Gson gson = new Gson();
+                Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                 mListener.onFinishDialog(tweet);
                 dismiss();
             }

@@ -21,6 +21,7 @@ import com.dyadav.chirpntweet.fragments.HomeTimelineFragment;
 import com.dyadav.chirpntweet.fragments.MentionsTimelineFragment;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -149,7 +150,9 @@ public class TimelineActivity extends BaseActivity {
         client.getAccountInfo(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJson(response);
+                Gson gson = new Gson();
+
+                user = gson.fromJson(response.toString(), User.class);
 
                 //Set cover image
                 ImageView cover = (ImageView) findViewById(R.id.img_header_bg);

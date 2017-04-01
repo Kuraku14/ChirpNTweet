@@ -21,9 +21,11 @@ import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.EndlessRecyclerViewScrollListener;
 import com.dyadav.chirpntweet.utils.NetworkUtility;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -103,7 +105,16 @@ public class PhotosFragment extends Fragment {
                 if (fRequest)
                     mTweetList.clear();
 
-                ArrayList<Tweet> newTweet = Tweet.fromJSONArray(response);
+                ArrayList<Tweet> newTweet = new ArrayList<>();
+                Gson gson = new Gson();
+                for(int i = 0; i < response.length(); i++) {
+                    try {
+                        Tweet tweet = gson.fromJson(response.getJSONObject(i).toString(),Tweet.class);
+                        newTweet.add(tweet);
+                    } catch (JSONException e) {
+                    }
+                }
+
                 mTweetList.addAll(newTweet);
                 mAdapter.notifyDataSetChanged();
                 binding.swipeContainer.setRefreshing(false);

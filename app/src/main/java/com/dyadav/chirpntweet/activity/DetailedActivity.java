@@ -15,11 +15,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.databinding.ActivityDetailedBinding;
-import com.dyadav.chirpntweet.modal.Media;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
 import com.dyadav.chirpntweet.utils.KeyboardUtility;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -81,11 +81,11 @@ public class DetailedActivity extends AppCompatActivity {
         favorite_count.setText(String.valueOf(tweet.getFavoriteCount()));
         retweet_count.setText(String.valueOf(tweet.getRetweetCount()));
 
-        Media media = tweet.getMedia();
-        Media exMedia = tweet.getExtendedMedia();
-        if(media != null) {
+        if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
+                !tweet.getEntities().getMedia().isEmpty()  &&
+                tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null) {
             Glide.with(this)
-                    .load(media.getMediaUrlHttps())
+                    .load(tweet.getEntities().getMedia().get(0).getMediaUrlHttps())
                     .bitmapTransform(new RoundedCornersTransformation(this,20,0))
                     .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                     .into(binding.tweetImage);
@@ -146,7 +146,8 @@ public class DetailedActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    Tweet tweet = Tweet.fromJson(response);
+                    Gson gson = new Gson();
+                    Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                     //Update icon and count
                     favorite_count.setText(String.valueOf(tweet.getFavoriteCount()));
                     if(tweet.getFavorited())
@@ -170,7 +171,8 @@ public class DetailedActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    Tweet tweet = Tweet.fromJson(response);
+                    Gson gson = new Gson();
+                    Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                     //Update icon and count
                     retweet_count.setText(String.valueOf(tweet.getRetweetCount()));
 
