@@ -3,6 +3,7 @@ package com.dyadav.chirpntweet.rest;
 import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
+import com.dyadav.chirpntweet.BuildConfig;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -11,11 +12,11 @@ import org.scribe.builder.api.TwitterApi;
 
 public class TwitterClient extends OAuthBaseClient{
 
-    public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
-    public static final String REST_URL = "https://api.twitter.com/1.1";
-    public static final String REST_CONSUMER_KEY = "UOW4l50S5Czlcp66LXrNiGeEg";
-    public static final String REST_CONSUMER_SECRET = "9TkjldnM1BRot6mifv8Ttm0a0I66LAQcFqe2txtoL1EaMpZShx";
-    public static final String REST_CALLBACK_URL = "x-oauthflow-twitter://chirpntweet.com";
+    private static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
+    private static final String REST_URL = "https://api.twitter.com/1.1";
+    private static final String REST_CONSUMER_KEY = BuildConfig.consumerkey;
+    private static final String REST_CONSUMER_SECRET = BuildConfig.consumersecret;
+    private static final String REST_CALLBACK_URL = "x-oauthflow-twitter://chirpntweet.com";
 
     public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -71,7 +72,14 @@ public class TwitterClient extends OAuthBaseClient{
         client.get(apiUrl, params, handler);
     }
 
-    //6. Send Message
+    //6. Get Message
+    public void getMessages(long id, AsyncHttpResponseHandler repsonseHandler) {
+        String apiUrl = getApiUrl("direct_messages.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 10);
+        params.put("since_id", String.valueOf(id));
+        getClient().get(apiUrl, null, repsonseHandler);
+    }
 
     //7. Reply to Tweet
     public void postReply(long id, String status, AsyncHttpResponseHandler handler){
