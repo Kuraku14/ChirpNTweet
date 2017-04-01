@@ -65,6 +65,16 @@ public class User extends BaseModel implements Parcelable {
     @Expose
     private String location;
 
+    @Column
+    @SerializedName("following")
+    @Expose
+    private boolean following;
+
+    @Column
+    @SerializedName("follow_request_sent")
+    @Expose
+    private boolean follow_request_sent;
+
     public User() {
     }
 
@@ -150,6 +160,14 @@ public class User extends BaseModel implements Parcelable {
         this.location = location;
     }
 
+    public boolean isFollowing() { return following; }
+
+    public void setFollowing(boolean following) { this.following = following; }
+
+    public boolean isFollow_request_sent() { return follow_request_sent; }
+
+    public void setFollow_request_sent(boolean follow_request_sent) { this.follow_request_sent = follow_request_sent; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -167,6 +185,8 @@ public class User extends BaseModel implements Parcelable {
         parcel.writeString(followerCount);
         parcel.writeString(location);
         parcel.writeString(description);
+        parcel.writeByte((byte) (following ? 1 : 0));
+        parcel.writeByte((byte) (follow_request_sent ? 1 : 0));
     }
 
     protected User(Parcel in) {
@@ -180,6 +200,8 @@ public class User extends BaseModel implements Parcelable {
         followerCount = in.readString();
         location = in.readString();
         description = in.readString();
+        following = in.readByte() != 0;
+        follow_request_sent = in.readByte() != 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

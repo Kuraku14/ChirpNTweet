@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.adapter.FollowAdapter;
@@ -42,6 +43,7 @@ public class FollowActivity extends AppCompatActivity {
     private LinearLayoutManager mLayoutManager;
     private int cursor = -1;
     private ArrayList<User> mUsers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +100,17 @@ public class FollowActivity extends AppCompatActivity {
 
         //Call twitter API
         selectTwitterAPI();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void selectTwitterAPI() {
