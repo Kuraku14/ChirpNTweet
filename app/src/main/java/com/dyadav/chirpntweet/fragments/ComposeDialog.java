@@ -137,7 +137,7 @@ public class ComposeDialog extends DialogFragment {
             binding.userName.setText(user.getName());
             binding.screenName.setText("@" + user.getScreenName());
         }
-
+        
         //Fetch from shared preference and saved draft and display, hide drafts
         if (str != null) {
             binding.tweetBody.setText(str);

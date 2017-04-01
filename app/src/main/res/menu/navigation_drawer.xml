@@ -20,6 +20,11 @@
             android:id="@+id/connect"
             android:icon="@drawable/connect"
             android:title="@string/connect" />
+
+        <item
+            android:id="@+id/logOut"
+            android:icon="@drawable/logout"
+            android:title="@string/logout" />
     </group>
 
     <group>

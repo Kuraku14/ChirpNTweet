@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -187,9 +188,9 @@ public abstract class BaseTimelineFragment extends Fragment {
                 }
             });
             fDialog.setArguments(bundle);
+            fDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppThemeFullScreen);
             fDialog.show(getActivity().getSupportFragmentManager(), "");
         }
-
     }
 
     private long getMaxId() {

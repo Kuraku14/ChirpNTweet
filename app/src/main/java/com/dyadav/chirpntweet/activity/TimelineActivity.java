@@ -3,6 +3,7 @@ package com.dyadav.chirpntweet.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,12 +52,16 @@ public class TimelineActivity extends BaseActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        setupViewPager(binding.viewpager);
-
-        binding.tabs.setupWithViewPager(binding.viewpager);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setupViewPager(binding.viewpager);
+                binding.tabs.setupWithViewPager(binding.viewpager);
+            }
+        }, 2000);
 
         setupNavigationDrawer();
-
         setUpNavigationView();
     }
 
@@ -122,6 +127,14 @@ public class TimelineActivity extends BaseActivity {
                     case R.id.messages:
                         startActivity(new Intent(TimelineActivity.this, DirectMessages.class));
                         binding.drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.logOut:
+                        TwitterClient client;
+                        client = TwitterApplication.getRestClient();
+                        client.clearAccessToken();
+                        finish();
+                        //Show Login Screen
                         return true;
 
                     case R.id.lists:
