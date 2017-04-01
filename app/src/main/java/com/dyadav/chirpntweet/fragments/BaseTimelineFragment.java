@@ -98,14 +98,14 @@ public abstract class BaseTimelineFragment extends Fragment {
         //Client instance
         client = TwitterApplication.getRestClient();
 
-        mTweetList = new ArrayList<>();
-        mAdapter = new TweetAdapter(getContext(), mTweetList);
-        binding.rView.setAdapter(mAdapter);
-        binding.rView.setItemAnimator(new DefaultItemAnimator());
-
         //Fetch user info
         Bundle args = getArguments();
         user = args.getParcelable("user");
+
+        mTweetList = new ArrayList<>();
+        mAdapter = new TweetAdapter(getContext(), mTweetList, user);
+        binding.rView.setAdapter(mAdapter);
+        binding.rView.setItemAnimator(new DefaultItemAnimator());
 
         //Recylerview decorater
         RecyclerView.ItemDecoration itemDecoration =

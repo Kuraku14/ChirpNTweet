@@ -50,16 +50,23 @@ public class ProfileActivity extends AppCompatActivity {
                 .load(user.getProfileImageURL())
                 .into(binding.profileImage);
 
-        binding.followerCount.setText(user.getFollowerCount() + " FOLLOWERS");
-        binding.followingCount.setText(user.getFollowingCount() + " FOLLOWING");
+        binding.followerCount.setText(user.getFollowerCount());
+        binding.followingCount.setText(user.getFollowingCount());
         binding.userName.setText(user.getName());
-        binding.screenName.setText(user.getScreenName());
-        if (null != user.getDescription())
+        binding.screenName.setText("@" + user.getScreenName());
+        if (null != user.getDescription()) {
+            binding.description.setVisibility(View.VISIBLE);
             binding.description.setText(user.getDescription());
+        }else{
+            binding.description.setVisibility(View.GONE);
+        }
 
-        if (null != user.getLocation())
+        if (null != user.getLocation()) {
+            binding.locationIcon.setVisibility(View.VISIBLE);
             binding.location.setText(user.getLocation());
-
+        } else {
+            binding.locationIcon.setVisibility(View.GONE);
+        }
         setupViewPager(binding.viewpager);
         binding.tabs.setupWithViewPager(binding.viewpager);
 

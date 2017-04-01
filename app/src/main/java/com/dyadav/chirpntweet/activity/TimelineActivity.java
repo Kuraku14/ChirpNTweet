@@ -1,5 +1,6 @@
 package com.dyadav.chirpntweet.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -32,12 +33,18 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TimelineActivity extends BaseActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private User user;
     private ActivityMainBinding binding;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,7 @@ public class TimelineActivity extends BaseActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 setupViewPager(binding.viewpager);
                 binding.tabs.setupWithViewPager(binding.viewpager);
             }
@@ -135,6 +143,7 @@ public class TimelineActivity extends BaseActivity {
                         client.clearAccessToken();
                         finish();
                         //Show Login Screen
+                        startActivity(new Intent(TimelineActivity.this, LoginActivity.class));
                         return true;
 
                     case R.id.lists:

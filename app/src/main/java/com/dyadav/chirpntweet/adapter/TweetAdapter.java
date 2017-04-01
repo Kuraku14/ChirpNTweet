@@ -17,6 +17,7 @@ import com.dyadav.chirpntweet.activity.DetailedActivity;
 import com.dyadav.chirpntweet.activity.ProfileActivity;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.modal.Tweet;
+import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
 import com.google.gson.Gson;
@@ -37,6 +38,7 @@ public class TweetAdapter extends
     private ArrayList<Tweet> tweetList;
     private Context context;
     private TwitterClient client;
+    private User loggedUser;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.userName)
@@ -84,9 +86,10 @@ public class TweetAdapter extends
         }
     }
 
-    public TweetAdapter(Context context, ArrayList<Tweet> tweetList) {
+    public TweetAdapter(Context context, ArrayList<Tweet> tweetList, User loggedUser) {
         this.tweetList = tweetList;
         this.context = context;
+        this.loggedUser = loggedUser;
     }
 
     @Override
@@ -143,6 +146,10 @@ public class TweetAdapter extends
             holder.retweetCount.setText(String.valueOf(tweet.getRetweetCount()));
 
             holder.userProfileImage.setOnClickListener(v -> {
+                //If same user do not launch
+                if  (loggedUser.getScreenName().equals(tweet.getUser().getScreenName()))
+                    return;
+                //else finish and launch
                 Intent intent = new Intent(context, ProfileActivity.class);
                 intent.putExtra("user", tweet.getUser());
                 context.startActivity(intent);

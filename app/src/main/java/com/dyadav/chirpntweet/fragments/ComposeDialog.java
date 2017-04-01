@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
@@ -119,11 +120,14 @@ public class ComposeDialog extends DialogFragment {
                             }
                         }
                     });
-
+                    fDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppThemeFullScreen);
                     fDialog.show(getActivity().getSupportFragmentManager(), "");
                 }
             });
         }
+
+        //Show keyboard
+        KeyboardUtility.showKeyboard(getContext(), binding.tweetBody);
 
         //Fetch logged in user info
         Bundle bundle = getArguments();
@@ -137,7 +141,7 @@ public class ComposeDialog extends DialogFragment {
             binding.userName.setText(user.getName());
             binding.screenName.setText("@" + user.getScreenName());
         }
-        
+
         //Fetch from shared preference and saved draft and display, hide drafts
         if (str != null) {
             binding.tweetBody.setText(str);
@@ -191,6 +195,13 @@ public class ComposeDialog extends DialogFragment {
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //To show IME at dialog oncreateview
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     private int getDrafts() {
