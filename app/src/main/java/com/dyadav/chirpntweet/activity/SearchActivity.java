@@ -23,7 +23,6 @@ public class SearchActivity extends AppCompatActivity {
         Intent i = getIntent();
         mUser = i.getParcelableExtra("user");
         query = i.getStringExtra("query");
-
         String query = getIntent().getStringExtra("query");
         loadFragment(query);
     }
@@ -33,10 +32,10 @@ public class SearchActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putParcelable("user", mUser);
+        bundle.putString("query", query);
         fragment.setArguments(bundle);
         ft.replace(R.id.fragment, fragment);
         ft.commit();
-
     }
 
 }

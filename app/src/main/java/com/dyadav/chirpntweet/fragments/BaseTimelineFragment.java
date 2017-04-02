@@ -58,7 +58,7 @@ public abstract class BaseTimelineFragment extends Fragment {
 
     public BaseTimelineFragment() {}
 
-    protected JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+    JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
             if (fRequest)
@@ -98,9 +98,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         //Client instance
         client = TwitterApplication.getRestClient();
 
-        //Fetch user info
-        Bundle args = getArguments();
-        user = args.getParcelable("user");
+        fetchBundle();
 
         mTweetList = new ArrayList<>();
         mAdapter = new TweetAdapter(getContext(), mTweetList, user);
@@ -171,6 +169,12 @@ public abstract class BaseTimelineFragment extends Fragment {
         }, 1000);
 
         return binding.getRoot();
+    }
+
+    void fetchBundle() {
+        //Fetch user info
+        Bundle args = getArguments();
+        user = args.getParcelable("user");
     }
 
     private void createComposeDialog(String s) {
