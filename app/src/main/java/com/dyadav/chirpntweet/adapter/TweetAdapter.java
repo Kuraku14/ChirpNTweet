@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,7 +195,6 @@ public class TweetAdapter extends
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
-                    Log.d("user", response.get(0).toString());
                     Gson gson = new Gson();
                     User spanUser = gson.fromJson(response.get(0).toString(), User.class);
 

@@ -76,8 +76,8 @@ public class TwitterClient extends OAuthBaseClient{
     public void getMessages(long id, AsyncHttpResponseHandler repsonseHandler) {
         String apiUrl = getApiUrl("direct_messages.json");
         RequestParams params = new RequestParams();
-        params.put("count", 10);
-        params.put("since_id", String.valueOf(id));
+        if (id > 0)
+            params.put("max_id", id);
         getClient().get(apiUrl, null, repsonseHandler);
     }
 
@@ -164,6 +164,24 @@ public class TwitterClient extends OAuthBaseClient{
         String apiUrl = getApiUrl("users/lookup.json");
         RequestParams params = new RequestParams();
         params.put("screen_name", screenName);
+        getClient().get(apiUrl, params, handler);
+    }
+
+    //16. Get trending topics
+    public void getTrends(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("trends/place.json");
+        RequestParams params = new RequestParams();
+        params.put("id", 1);
+        getClient().get(apiUrl, params, handler);
+    }
+
+    //17. Tweet search
+    public void searchQuery(String search, long id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("search/tweets.json");
+        RequestParams params = new RequestParams();
+        params.put("q", search);
+        if (id > 0)
+            params.put("max_id", id);
         getClient().get(apiUrl, params, handler);
     }
 }
