@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.activity.DetailedActivity;
 import com.dyadav.chirpntweet.activity.ProfileActivity;
+import com.dyadav.chirpntweet.activity.SearchActivity;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.modal.User;
@@ -171,6 +172,7 @@ public class TweetAdapter extends
             holder.reply.setOnClickListener(v -> {
                 Intent intent = new Intent(context, DetailedActivity.class);
                 intent.putExtra("tweet", tweet);
+                intent.putExtra("user", loggedUser);
                 context.startActivity(intent);
             });
 
@@ -185,7 +187,10 @@ public class TweetAdapter extends
     }
 
     private void openTrendsView(String text) {
-        //:TODO
+        Intent i = new Intent(context, SearchActivity.class);
+        i.putExtra("query", text);
+        i.putExtra("user", loggedUser);
+        context.startActivity(i);
     }
 
     private void openProfileView(String text) {

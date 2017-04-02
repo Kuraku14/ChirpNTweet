@@ -53,6 +53,7 @@ public class DetailedActivity extends AppCompatActivity {
 
     private ActivityDetailedBinding binding;
     TwitterClient client;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class DetailedActivity extends AppCompatActivity {
 
         //Get tweet info and display
         final Tweet tweet = getIntent().getExtras().getParcelable("tweet");
+        user = getIntent().getParcelableExtra("user");
         Glide.with(this)
                 .load(tweet.getUser().getProfileImageURL())
                 .into(binding.profileImage);
@@ -158,7 +160,10 @@ public class DetailedActivity extends AppCompatActivity {
     }
 
     private void openTrendsView(String text) {
-        //:TODO
+        Intent i = new Intent(this, SearchActivity.class);
+        i.putExtra("query", text);
+        i.putExtra("user", user);
+        startActivity(i);
     }
 
     private void openProfileView(String text) {
