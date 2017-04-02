@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,6 +26,7 @@ import com.dyadav.chirpntweet.utils.PatternEditableBuilder;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -176,14 +177,41 @@ public class TweetAdapter extends
 
             new PatternEditableBuilder().
                     addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
-                            text -> Toast.makeText(context, "Clicked username: " + text,
-                                    Toast.LENGTH_SHORT).show()).into(holder.tweetBody);
+                            text -> openProfileView(text)).into(holder.tweetBody);
 
             new PatternEditableBuilder().
                     addPattern(Pattern.compile("\\#(\\w+)"), Color.BLUE,
-                            text -> Toast.makeText(context, "Clicked username: " + text,
-                                    Toast.LENGTH_SHORT).show()).into(holder.tweetBody);
+                            text -> openTrendsView(text)).into(holder.tweetBody);
         }
+    }
+
+    private void openTrendsView(String text) {
+        //:TODO
+    }
+
+    private void openProfileView(String text) {
+        //Get user info using screename and launch profile activity
+        client = TwitterApplication.getRestClient();
+        client.lookupUser(text.replace("@", ""), new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    Log.d("user", response.get(0).toString());
+                    Gson gson = new Gson();
+                    User spanUser = gson.fromJson(response.get(0).toString(), User.class);
+
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("user", spanUser);
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            }
+        });
     }
 
     @Override
@@ -193,7 +221,7 @@ public class TweetAdapter extends
 
     private void markFavorite(boolean favorite, Long id, final int position) {
         client = TwitterApplication.getRestClient();
-        client.setFavorite(!favorite, id,new JsonHttpResponseHandler(){
+        client.setFavorite(!favorite, id, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {

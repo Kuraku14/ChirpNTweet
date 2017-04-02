@@ -1,5 +1,6 @@
 package com.dyadav.chirpntweet.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,10 +8,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -18,6 +19,7 @@ import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.databinding.ActivityDetailedBinding;
 import com.dyadav.chirpntweet.modal.Tweet;
+import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
 import com.dyadav.chirpntweet.utils.KeyboardUtility;
@@ -25,6 +27,7 @@ import com.dyadav.chirpntweet.utils.PatternEditableBuilder;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.regex.Pattern;
@@ -77,13 +80,11 @@ public class DetailedActivity extends AppCompatActivity {
 
         new PatternEditableBuilder().
                 addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
-                        text -> Toast.makeText(this, "Clicked username: " + text,
-                                Toast.LENGTH_SHORT).show()).into(binding.tweetBody);
+                        text -> openProfileView(text)).into(binding.tweetBody);
 
         new PatternEditableBuilder().
                 addPattern(Pattern.compile("\\#(\\w+)"), Color.BLUE,
-                        text -> Toast.makeText(this, "Clicked username: " + text,
-                                Toast.LENGTH_SHORT).show()).into(binding.tweetBody);
+                        text -> openTrendsView(text)).into(binding.tweetBody);
 
         binding.timeStamp.setText(DateUtility.detailedViewFormatDate(tweet.getCreatedAt()));
         if(tweet.getUser().getVerified())
@@ -152,6 +153,35 @@ public class DetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 retweet(tweet.isRetweeted(), tweet.getUid());
+            }
+        });
+    }
+
+    private void openTrendsView(String text) {
+        //:TODO
+    }
+
+    private void openProfileView(String text) {
+        //Get user info using screename and launch profile activity
+        client = TwitterApplication.getRestClient();
+        client.lookupUser(text.replace("@", ""), new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    Log.d("user", response.get(0).toString());
+                    Gson gson = new Gson();
+                    User spanUser = gson.fromJson(response.get(0).toString(), User.class);
+
+                    Intent intent = new Intent(DetailedActivity.this, ProfileActivity.class);
+                    intent.putExtra("user", spanUser);
+                    DetailedActivity.this.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
             }
         });
     }
