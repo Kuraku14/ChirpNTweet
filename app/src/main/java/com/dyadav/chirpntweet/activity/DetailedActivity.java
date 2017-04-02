@@ -1,6 +1,7 @@
 package com.dyadav.chirpntweet.activity;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,10 +21,13 @@ import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
 import com.dyadav.chirpntweet.utils.KeyboardUtility;
+import com.dyadav.chirpntweet.utils.PatternEditableBuilder;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
+
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +74,18 @@ public class DetailedActivity extends AppCompatActivity {
         binding.userName.setText(tweet.getUser().getName());
         binding.screenName.setText("@" + tweet.getUser().getScreenName());
         binding.tweetBody.setText(tweet.getBody());
-        binding.timeStamp.setText(DateUtility.getRelativeTimeAgo(tweet.getCreatedAt()));
+
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
+                        text -> Toast.makeText(this, "Clicked username: " + text,
+                                Toast.LENGTH_SHORT).show()).into(binding.tweetBody);
+
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\#(\\w+)"), Color.BLUE,
+                        text -> Toast.makeText(this, "Clicked username: " + text,
+                                Toast.LENGTH_SHORT).show()).into(binding.tweetBody);
+
+        binding.timeStamp.setText(DateUtility.detailedViewFormatDate(tweet.getCreatedAt()));
         if(tweet.getUser().getVerified())
             binding.verified.setImageDrawable(getResources().getDrawable(R.drawable.verified));
 

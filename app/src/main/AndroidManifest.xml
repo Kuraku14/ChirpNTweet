@@ -49,7 +49,7 @@
             android:name=".activity.ProfileActivity" />
 
         <activity
-            android:name=".activity.DirectMessages" />
+            android:name=".activity.DirectMessagesActivity" />
 
         <activity android:name=".activity.FollowActivity" />
     </application>

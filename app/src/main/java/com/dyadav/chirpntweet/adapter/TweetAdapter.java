@@ -2,6 +2,7 @@ package com.dyadav.chirpntweet.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -20,12 +22,14 @@ import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
+import com.dyadav.chirpntweet.utils.PatternEditableBuilder;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -169,6 +173,16 @@ public class TweetAdapter extends
                 intent.putExtra("tweet", tweet);
                 context.startActivity(intent);
             });
+
+            new PatternEditableBuilder().
+                    addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
+                            text -> Toast.makeText(context, "Clicked username: " + text,
+                                    Toast.LENGTH_SHORT).show()).into(holder.tweetBody);
+
+            new PatternEditableBuilder().
+                    addPattern(Pattern.compile("\\#(\\w+)"), Color.BLUE,
+                            text -> Toast.makeText(context, "Clicked username: " + text,
+                                    Toast.LENGTH_SHORT).show()).into(holder.tweetBody);
         }
     }
 

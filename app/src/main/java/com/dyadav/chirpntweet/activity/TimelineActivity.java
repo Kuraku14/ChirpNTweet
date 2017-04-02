@@ -133,7 +133,7 @@ public class TimelineActivity extends BaseActivity {
                         return true;
 
                     case R.id.messages:
-                        startActivity(new Intent(TimelineActivity.this, DirectMessages.class));
+                        startActivity(new Intent(TimelineActivity.this, DirectMessagesActivity.class));
                         binding.drawerLayout.closeDrawers();
                         return true;
 
