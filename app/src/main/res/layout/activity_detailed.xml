@@ -15,10 +15,10 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
                 android:fitsSystemWindows="true"
+                android:elevation="5dp"
                 android:minHeight="?attr/actionBarSize"
-                app:titleTextColor="@android:color/white"
+                android:background="@android:color/white"
                 app:titleMarginStart="32dp"
                 app:contentInsetLeft="20dp"
                 app:contentInsetStart="20dp" />
@@ -115,8 +115,7 @@
                 android:layout_below="@+id/tweetImage"
                 android:textSize="15sp"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
+                android:layout_alignStart="@+id/tweetBody"
                 android:layout_marginBottom="5dp"
                 android:textAlignment="center"/>
 
@@ -132,12 +131,11 @@
             <include layout="@layout/detail_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/line1"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/tweetBody"
                 android:id="@+id/include" />
 
             <View
@@ -172,6 +170,7 @@
                 android:id="@+id/retweetBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:text="@string/reply"
                 android:layout_alignBottom="@+id/replyTweet"
                 android:layout_alignParentEnd="true" />

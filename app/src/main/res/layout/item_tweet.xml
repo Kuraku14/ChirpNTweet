@@ -38,7 +38,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/profileCard"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:layout_marginLeft="20dp"
             android:textAlignment="center"/>
 
@@ -79,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/userName"
             android:layout_marginBottom="5dp"
+            android:textSize="15sp"
             android:textColor="@android:color/primary_text_light"
             android:layout_alignLeft="@+id/userName"
             android:layout_alignStart="@+id/userName"

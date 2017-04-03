@@ -90,7 +90,8 @@ public class TimelineActivity extends BaseActivity {
         setSupportActionBar(binding.toolbar);
 
         getSupportActionBar().setDisplayUseLogoEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("Home");
+
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
