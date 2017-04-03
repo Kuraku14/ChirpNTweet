@@ -127,7 +127,7 @@ public class TwitterClient extends OAuthBaseClient{
 
     //11. Get FOLLOWERS
     public void getFollowersList(Long cursor, String screenName, AsyncHttpResponseHandler handler) {
-        String apiUrl = getApiUrl("friends/list.json");
+        String apiUrl = getApiUrl("followers/list.json");
         RequestParams params = new RequestParams();
         if (cursor > 0)
             params.put("cursor", cursor);
@@ -137,7 +137,7 @@ public class TwitterClient extends OAuthBaseClient{
 
     //12. Get FOLLOWING
     public void getFollowingList(Long cursor, String screenName, AsyncHttpResponseHandler handler) {
-        String apiUrl = getApiUrl("followers/list.json");
+        String apiUrl = getApiUrl("friends/list.json");
         RequestParams params = new RequestParams();
         if (cursor > 0)
             params.put("cursor", cursor);

@@ -115,14 +115,14 @@ public class FollowActivity extends AppCompatActivity {
 
     private void selectTwitterAPI() {
         if (type.equals("follower")) {
-            populateFollowers(cursor, user.getScreenName());
+            populateFollowers(user.getScreenName());
         } else {
-            populateFollowing(cursor, user.getScreenName());
+            populateFollowing(user.getScreenName());
         }
     }
 
-    private void populateFollowing(Long i, String screenName) {
-        client.getFollowingList(i, screenName, new JsonHttpResponseHandler() {
+    private void populateFollowing(String screenName) {
+        client.getFollowingList(cursor, screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 if (cursor < 0)
@@ -147,11 +147,11 @@ public class FollowActivity extends AppCompatActivity {
         });
     }
 
-    private void populateFollowers(Long i, String screenName) {
-        client.getFollowersList(i, screenName, new JsonHttpResponseHandler() {
+    private void populateFollowers(String screenName) {
+        client.getFollowersList(cursor, screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                if (cursor == 0)
+                if (cursor < 0)
                     mUsers.clear();
 
                 try {
