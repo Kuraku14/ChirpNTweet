@@ -41,7 +41,7 @@ public class FollowActivity extends AppCompatActivity {
     private FollowAdapter mAdapter;
     private EndlessRecyclerViewScrollListener scrollListener;
     private LinearLayoutManager mLayoutManager;
-    private int cursor = -1;
+    private Long cursor = -1L;
     private ArrayList<User> mUsers;
 
     @Override
@@ -94,7 +94,7 @@ public class FollowActivity extends AppCompatActivity {
                 binding.swipeContainer.setRefreshing(false);
                 return;
             }
-            cursor = -1;
+            cursor = -1L;
             selectTwitterAPI();
         });
 
@@ -121,16 +121,16 @@ public class FollowActivity extends AppCompatActivity {
         }
     }
 
-    private void populateFollowing(int i, String screenName) {
-        client.getFollowingList(String.valueOf(i), screenName, new JsonHttpResponseHandler() {
+    private void populateFollowing(Long i, String screenName) {
+        client.getFollowingList(i, screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                if (cursor == 0)
+                if (cursor < 0)
                     mUsers.clear();
 
                 try {
                     ArrayList<User> user = fromJSONArray(response.getJSONArray("users"));
-                    cursor = response.getInt("next_cursor");
+                    cursor = response.getLong("next_cursor");
                     mUsers.addAll(user);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -147,8 +147,8 @@ public class FollowActivity extends AppCompatActivity {
         });
     }
 
-    private void populateFollowers(int i, String screenName) {
-        client.getFollowersList(String.valueOf(i), screenName, new JsonHttpResponseHandler() {
+    private void populateFollowers(Long i, String screenName) {
+        client.getFollowersList(i, screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 if (cursor == 0)
@@ -156,6 +156,7 @@ public class FollowActivity extends AppCompatActivity {
 
                 try {
                     ArrayList<User> user = fromJSONArray(response.getJSONArray("users"));
+                    cursor = response.getLong("next_cursor");
                     mUsers.addAll(user);
                 } catch (JSONException e) {
                     e.printStackTrace();

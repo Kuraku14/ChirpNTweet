@@ -2,7 +2,6 @@ package com.dyadav.chirpntweet.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -39,7 +38,6 @@ public class DirectMessagesActivity extends AppCompatActivity {
     protected DirectMessageAdapter mAdapter;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected LinearLayoutManager mLayoutManager;
-    protected boolean fRequest;
     protected Long maxId;
 
     @Override
@@ -70,8 +68,8 @@ public class DirectMessagesActivity extends AppCompatActivity {
         scrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Handler handler = new Handler();
-                handler.postDelayed(() -> populateMessages(false, getMaxId()), 1000);
+                //Handler handler = new Handler();
+                //handler.postDelayed(() -> populateMessages(false, getMaxId()), 1000);
             }
         };
         binding.rvMessages.addOnScrollListener(scrollListener);
@@ -92,12 +90,12 @@ public class DirectMessagesActivity extends AppCompatActivity {
         populateMessages(true, 0);
     }
 
-    private void populateMessages(final boolean request, long id) {
+    private void populateMessages(boolean request, long id) {
         client.getMessages(id,new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
-                    if (fRequest)
+                    if (request)
                         mMessages.clear();
 
                     ArrayList<DirectMessages> msg = new ArrayList<>();
