@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
-import com.dyadav.chirpntweet.modal.Tweet;
 
 import java.util.List;
 
@@ -21,10 +20,10 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class ProfilePhotosAdapter  extends
         RecyclerView.Adapter<ProfilePhotosAdapter.MyViewHolder>  {
 
-    private List<Tweet> userPhotos;
+    private List<String> userPhotos;
     private Context context;
 
-    public ProfilePhotosAdapter(List<Tweet> userPhotos, Context context) {
+    public ProfilePhotosAdapter(List<String> userPhotos, Context context) {
         this.userPhotos = userPhotos;
         this.context = context;
     }
@@ -49,15 +48,13 @@ public class ProfilePhotosAdapter  extends
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Tweet tweet = userPhotos.get(position);
+        String url = userPhotos.get(position);
 
-        if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
-                !tweet.getEntities().getMedia().isEmpty()  &&
-                tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null)
-            Glide.with(context).load(tweet.getEntities().getMedia().get(0).getMediaUrlHttps())
-                    .bitmapTransform(new RoundedCornersTransformation(context,20,0))
-                    .diskCacheStrategy( DiskCacheStrategy.SOURCE )
-                    .into(holder.userPhoto);
+        holder.userPhoto.setImageResource(0);
+        Glide.with(context).load(url)
+            .bitmapTransform(new RoundedCornersTransformation(context,20,0))
+            .diskCacheStrategy( DiskCacheStrategy.SOURCE )
+            .into(holder.userPhoto);
     }
 
     @Override

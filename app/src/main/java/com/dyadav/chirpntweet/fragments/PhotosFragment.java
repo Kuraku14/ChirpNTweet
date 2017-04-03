@@ -38,8 +38,9 @@ public class PhotosFragment extends Fragment {
     private ProfilePhotosAdapter mAdapter;
     private User user;
     private TwitterClient client;
-    private ArrayList<Tweet> mTweetList;
+    private ArrayList<String> mTweetPhotos;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private Long maxId = -1L;
 
     public PhotosFragment() {}
 
@@ -49,7 +50,7 @@ public class PhotosFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.fragment_photos, container, false);
 
-        mTweetList = new ArrayList<>();
+        mTweetPhotos = new ArrayList<>();
 
         //Fetch user infor from bundle and fetch tweets using screenname
         Bundle args = getArguments();
@@ -59,7 +60,7 @@ public class PhotosFragment extends Fragment {
         //Setup grid manager
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
         binding.rvPhotos.setLayoutManager(gridLayoutManager);
-        mAdapter = new ProfilePhotosAdapter(mTweetList, getActivity());
+        mAdapter = new ProfilePhotosAdapter(mTweetPhotos, getActivity());
         binding.rvPhotos.setAdapter(mAdapter);
         binding.rvPhotos.setItemAnimator(new DefaultItemAnimator());
 
@@ -69,7 +70,7 @@ public class PhotosFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 //Handle fetching in a thread with delay to avoid error "API Limit reached" = 429
                 Handler handler = new Handler();
-                handler.postDelayed(() -> fetchPhotos(false, getMaxId()), 1000);
+                handler.postDelayed(() -> fetchPhotos(false), 1000);
             }
         };
         binding.rvPhotos.addOnScrollListener(scrollListener);
@@ -83,39 +84,42 @@ public class PhotosFragment extends Fragment {
                 return;
             }
             //Fetch first page
-            fetchPhotos(true, 0);
+            fetchPhotos(true);
         });
 
-        fetchPhotos(true, 0);
+        fetchPhotos(true);
 
         //Click on photos to open a new Screen
         return binding.getRoot();
     }
 
-    private long getMaxId() {
-        return mTweetList.get(mTweetList.size() - 1).getUid();
-    }
-
-    private void fetchPhotos(boolean fRequest, long maxId) {
+    private void fetchPhotos(boolean fRequest) {
         binding.progressBar.setVisibility(View.VISIBLE);
 
         client.getUsersTimeline(fRequest, maxId - 1, user.getScreenName(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 if (fRequest)
-                    mTweetList.clear();
+                    mTweetPhotos.clear();
 
-                ArrayList<Tweet> newTweet = new ArrayList<>();
+                ArrayList<String> newTweet = new ArrayList<>();
                 Gson gson = new Gson();
                 for(int i = 0; i < response.length(); i++) {
                     try {
                         Tweet tweet = gson.fromJson(response.getJSONObject(i).toString(),Tweet.class);
-                        newTweet.add(tweet);
+                        if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
+                                !tweet.getEntities().getMedia().isEmpty()  &&
+                                tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null)
+                                    newTweet.add(tweet.getEntities().getMedia().get(0).getMediaUrlHttps());
+
+                        if (maxId < tweet.getUid()) {
+                            maxId = tweet.getUid();
+                        }
                     } catch (JSONException e) {
                     }
                 }
 
-                mTweetList.addAll(newTweet);
+                mTweetPhotos.addAll(newTweet);
                 mAdapter.notifyDataSetChanged();
                 binding.swipeContainer.setRefreshing(false);
                 binding.progressBar.setVisibility(View.GONE);
