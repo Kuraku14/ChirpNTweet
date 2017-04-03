@@ -100,6 +100,10 @@ public class TimelineActivity extends BaseActivity {
 
                 setupViewPager(binding.viewpager);
                 binding.tabs.setupWithViewPager(binding.viewpager);
+
+                //Setup fab button click
+                HomeTimelineFragment fragment = (HomeTimelineFragment) mFragmentList.get(0);
+                binding.fab.setOnClickListener(view -> fragment.createComposeDialog(null));
             }
         }, 2000);
 
@@ -236,9 +240,10 @@ public class TimelineActivity extends BaseActivity {
         });
     }
 
+    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<String> mFragmentTitleList = new ArrayList<>();
+
     private class TimelinePagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
 
         TimelinePagerAdapter(FragmentManager manager) {
             super(manager);

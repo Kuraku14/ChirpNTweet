@@ -25,7 +25,6 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
 
     @Override
     protected void fetchTimeline() {
-        binding.fab.setVisibility(View.GONE);
         client.searchQuery(query, maxId - 1, handler);
     }
 

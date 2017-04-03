@@ -146,7 +146,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         });
 
         // Attach FAB listener
-        binding.fab.setOnClickListener(view -> createComposeDialog(null));
+        //binding.fab.setOnClickListener(view -> createComposeDialog(null));
 
         //Fetch first page
         populateTimeline(true, 0);
@@ -177,7 +177,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         user = args.getParcelable("user");
     }
 
-    private void createComposeDialog(String s) {
+    public void createComposeDialog(String s) {
         ComposeDialog fDialog = new ComposeDialog();
         if (user != null) {
             Bundle bundle = new Bundle();
