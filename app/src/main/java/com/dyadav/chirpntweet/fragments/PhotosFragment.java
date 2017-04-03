@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.adapter.ProfilePhotosAdapter;
@@ -79,7 +80,7 @@ public class PhotosFragment extends Fragment {
         binding.swipeContainer.setOnRefreshListener(() -> {
             //Check internet
             if (!NetworkUtility.isOnline()) {
-                //Snackbar.make(getView(), R.string.connection_error, Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
             }
@@ -127,7 +128,7 @@ public class PhotosFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                //Snackbar.make(binding.cLayout, R.string.error_fetch, Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Error getting photos", Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 binding.progressBar.setVisibility(View.GONE);
             }

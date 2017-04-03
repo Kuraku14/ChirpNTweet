@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.adapter.DirectMessageAdapter;
@@ -78,7 +79,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
         binding.swipeContainer.setOnRefreshListener(() -> {
             //Check internet
             if (!NetworkUtility.isOnline()) {
-                //Snackbar.make(getView(), R.string.connection_error, Snackbar.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
             }

@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
@@ -235,7 +236,7 @@ public class TimelineActivity extends BaseActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                //Snackbar.make(binding.cLayout, R.string.user_info_error, Snackbar.LENGTH_LONG).show();
+                Toast.makeText(TimelineActivity.this, R.string.user_info_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
