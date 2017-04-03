@@ -33,7 +33,7 @@ The following **optional** features are implemented:
 
 The following **bonus** features are implemented:
 
-* [x] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
+* [x] Parcelable used
 * [x] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
 * [x] On the profile screen, leverage the [CoordinatorLayout](http://guides.codepath.com/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events) to [apply scrolling behavior](https://hackmd.io/s/SJyDOCgU) as the user scrolls through the profile timeline.
 * [x] User can only view their direct messages
@@ -42,13 +42,13 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [x] UI similiar to official twitter app
- * [x] Navigation drawer with header image
- * [x] Color pallete similiar to official twitter app. e.g. white toolbars, color pallate themed icons
+  * [x] Navigation drawer with header image
+  * [x] Color pallete similiar to official twitter app. e.g. white toolbars, color pallate themed icons
 * [x] Clickable spans
- * [x] When clicked on @Username profile view is shown
- * [x] When clicked on #hashtag serach view with related tweets is shown
+  * [x] When clicked on @Username profile view is shown
+  * [x] When clicked on #hashtag serach view with related tweets is shown
 * [x] Signout option
-* [x] Retrolambda
+* [x] Retrolambda used for even handling
 * [x] Twitter Key and Secret stored on a file
 
 ## Video Walkthrough on Dropbox
