@@ -42,7 +42,6 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
     compile 'jp.wasabeef:glide-transformations:2.0.2'
-    compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
