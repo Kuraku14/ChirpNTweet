@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/profileCard"
-        android:layout_width="50dp"
+
+    <ImageButton
+        android:id="@+id/profileImage"
         android:layout_height="50dp"
+        android:layout_width="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -16,19 +17,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        android:elevation="12dp"
-        app:cardCornerRadius="25dp"
-        android:layout_centerHorizontal="true"
-        android:innerRadius="0dp"
-        android:shape="ring"
-        android:thicknessRatio="1.9">
-        <ImageButton
-            android:id="@+id/profileImage"
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
-    </android.support.v7.widget.CardView>
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/userName"
@@ -41,8 +30,8 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="5dp"
         android:textColor="@android:color/primary_text_light"
-        android:layout_toEndOf="@+id/profileCard"
-        android:layout_toRightOf="@+id/profileCard" />
+        android:layout_toEndOf="@+id/profileImage"
+        android:layout_toRightOf="@+id/profileImage" />
 
     <TextView
         android:id="@+id/screenName"
