@@ -77,7 +77,8 @@ public abstract class BaseTimelineFragment extends Fragment {
 
             mTweetList.addAll(newTweet);
             addToDb(newTweet);
-            mAdapter.notifyDataSetChanged();
+            if (fRequest)
+                mAdapter.notifyDataSetChanged();
             binding.swipeContainer.setRefreshing(false);
             binding.progressBar.setVisibility(View.GONE);
         }
