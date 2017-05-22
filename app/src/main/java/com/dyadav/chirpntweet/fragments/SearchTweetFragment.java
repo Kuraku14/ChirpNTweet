@@ -44,7 +44,7 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            
+
             if (jsonArray == null)
                 return;
 

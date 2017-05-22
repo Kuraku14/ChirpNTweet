@@ -45,7 +45,6 @@ public class PhotosFragment extends Fragment {
 
     public PhotosFragment() {}
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,53 +52,51 @@ public class PhotosFragment extends Fragment {
 
         mTweetPhotos = new ArrayList<>();
 
-        //Fetch user infor from bundle and fetch tweets using screenname
         Bundle args = getArguments();
         user = args.getParcelable("user");
         client = TwitterApplication.getRestClient();
 
-        //Setup grid manager
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
         binding.rvPhotos.setLayoutManager(gridLayoutManager);
         mAdapter = new ProfilePhotosAdapter(mTweetPhotos, getActivity());
         binding.rvPhotos.setAdapter(mAdapter);
         binding.rvPhotos.setItemAnimator(new DefaultItemAnimator());
 
-        //Endless pagination
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                //Handle fetching in a thread with delay to avoid error "API Limit reached" = 429
                 Handler handler = new Handler();
                 handler.postDelayed(() -> fetchPhotos(false), 1000);
             }
         };
         binding.rvPhotos.addOnScrollListener(scrollListener);
 
-        //Swipe to refresh
         binding.swipeContainer.setOnRefreshListener(() -> {
-            //Check internet
             if (!NetworkUtility.isOnline()) {
                 Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
             }
-            //Fetch first page
             fetchPhotos(true);
         });
 
         fetchPhotos(true);
-
-        //Click on photos to open a new Screen
         return binding.getRoot();
     }
 
     private void fetchPhotos(boolean fRequest) {
+        if (!NetworkUtility.isOnline()) {
+            Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
+            binding.swipeContainer.setRefreshing(false);
+            return;
+        }
+
         binding.progressBar.setVisibility(View.VISIBLE);
 
         client.getUsersTimeline(fRequest, maxId - 1, user.getScreenName(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Tweet tweet = null;
                 if (fRequest)
                     mTweetPhotos.clear();
 
@@ -107,23 +104,24 @@ public class PhotosFragment extends Fragment {
                 Gson gson = new Gson();
                 for(int i = 0; i < response.length(); i++) {
                     try {
-                        Tweet tweet = gson.fromJson(response.getJSONObject(i).toString(),Tweet.class);
+                        tweet = gson.fromJson(response.getJSONObject(i).toString(),Tweet.class);
                         if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
                                 !tweet.getEntities().getMedia().isEmpty()  &&
                                 tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null)
-                                    newTweet.add(tweet.getEntities().getMedia().get(0).getMediaUrlHttps());
-
-                        if (maxId < tweet.getUid()) {
-                            maxId = tweet.getUid();
-                        }
-                    } catch (JSONException e) {
+                            newTweet.add(tweet.getEntities().getMedia().get(0).getMediaUrlHttps());
+                    } catch (JSONException ignored) {
                     }
                 }
-
-                mTweetPhotos.addAll(newTweet);
-                mAdapter.notifyDataSetChanged();
-                binding.swipeContainer.setRefreshing(false);
-                binding.progressBar.setVisibility(View.GONE);
+                maxId = tweet.getUid();
+                if (newTweet.size() > 0) {
+                    mTweetPhotos.addAll(newTweet);
+                    if (fRequest)
+                        mAdapter.notifyDataSetChanged();
+                    binding.swipeContainer.setRefreshing(false);
+                    binding.progressBar.setVisibility(View.GONE);
+                } else {
+                    fetchPhotos(false);
+                }
             }
 
             @Override

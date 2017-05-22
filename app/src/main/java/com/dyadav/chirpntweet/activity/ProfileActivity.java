@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.databinding.ActivityProfileBinding;
 import com.dyadav.chirpntweet.fragments.FavoritesFragment;
@@ -21,16 +23,16 @@ import com.dyadav.chirpntweet.modal.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileActivity extends AppCompatActivity {
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-    ActivityProfileBinding binding;
+public class ProfileActivity extends AppCompatActivity {
 
     private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
+        ActivityProfileBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
 
         getWindow().setBackgroundDrawable(null);
 
@@ -39,8 +41,9 @@ public class ProfileActivity extends AppCompatActivity {
         user = intent.getParcelableExtra("user");
 
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayShowTitleEnabled(false);
 
         //Backdrop
         Glide.with(this)
@@ -50,6 +53,8 @@ public class ProfileActivity extends AppCompatActivity {
         //Profile image
         Glide.with(this)
                 .load(user.getProfileImageURL())
+                .bitmapTransform(new RoundedCornersTransformation(this,30,0))
+                .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                 .into(binding.profileImage);
 
         binding.followerCount.setText(user.getFollowerCount());
@@ -72,32 +77,26 @@ public class ProfileActivity extends AppCompatActivity {
         setupViewPager(binding.viewpager);
         binding.tabs.setupWithViewPager(binding.viewpager);
 
-        binding.followerCount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, FollowActivity.class);
-                intent.putExtra("user", user);
-                intent.putExtra("list", "follower");
-                startActivity(intent);
-            }
+        binding.followerCount.setOnClickListener(v -> {
+            Intent intent1 = new Intent(ProfileActivity.this, FollowActivity.class);
+            intent1.putExtra("user", user);
+            intent1.putExtra("list", "follower");
+            startActivity(intent1);
         });
 
-        binding.followingCount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, FollowActivity.class);
-                intent.putExtra("user", user);
-                intent.putExtra("list", "following");
-                startActivity(intent);
-            }
+        binding.followingCount.setOnClickListener(v -> {
+            Intent intent12 = new Intent(ProfileActivity.this, FollowActivity.class);
+            intent12.putExtra("user", user);
+            intent12.putExtra("list", "following");
+            startActivity(intent12);
         });
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ProfilePagerAdapter adapter = new ProfilePagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new UserTimelineFragment(), "TWEETS");
-        adapter.addFragment(new PhotosFragment(), "PHOTOS");
-        adapter.addFragment(new FavoritesFragment(), "FAVORITES");
+        adapter.addFragment(new UserTimelineFragment(), getString(R.string.tab_tweets));
+        adapter.addFragment(new PhotosFragment(), getString(R.string.tab_photos));
+        adapter.addFragment(new FavoritesFragment(), getString(R.string.tab_favorites));
         viewPager.setAdapter(adapter);
     }
 

@@ -20,4 +20,7 @@
     <string name="logout">Logout</string>
     <string name="tab_home">HOME</string>
     <string name="tab_mentions">MENTIONS</string>
+    <string name="tab_tweets">TWEETS</string>
+    <string name="tab_photos">PHOTOS</string>
+    <string name="tab_favorites">FAVORITES</string>
 </resources>
