@@ -114,7 +114,7 @@ public abstract class BaseTimelineFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Handler handler = new Handler();
-                handler.postDelayed(() -> populateTimeline(false, getMaxId()), 500);
+                handler.postDelayed(() -> populateTimeline(false, getMaxId()), 1000);
             }
         };
         binding.rView.addOnScrollListener(scrollListener);
@@ -136,23 +136,6 @@ public abstract class BaseTimelineFragment extends Fragment {
         });
 
         populateTimeline(true, 0);
-
-        //Show compose tweet with delay
-        Handler handler = new Handler();
-
-        handler.postDelayed(() -> {
-            //Check for implicit Intent
-            // Get intent, action and MIME type
-            Intent intent = getActivity().getIntent();
-            String action = intent.getAction();
-            String type = intent.getType();
-            if (Intent.ACTION_SEND.equals(action) && type != null) {
-                if ("text/plain".equals(type)) {
-                    createComposeDialog(intent.getStringExtra(Intent.EXTRA_SUBJECT) + " - " +
-                            intent.getStringExtra(Intent.EXTRA_TEXT));
-                }
-            }
-        }, 1000);
 
         return binding.getRoot();
     }
