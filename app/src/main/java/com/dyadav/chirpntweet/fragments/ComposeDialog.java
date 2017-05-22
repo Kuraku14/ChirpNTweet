@@ -1,12 +1,9 @@
 package com.dyadav.chirpntweet.fragments;
 
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,19 +15,14 @@ import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.databinding.ComposeFragmentBinding;
-import com.dyadav.chirpntweet.modal.Drafts;
-import com.dyadav.chirpntweet.modal.Drafts_Table;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.KeyboardUtility;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONObject;
-
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -40,7 +32,6 @@ public class ComposeDialog extends DialogFragment {
     int MAX_TWEET_LENGTH = 140;
     int remain_char;
 
-    public static final String tweetDraft = "draft" ;
     public static final String tweet = "tweet";
 
     public ComposeDialog() {}
@@ -56,84 +47,18 @@ public class ComposeDialog extends DialogFragment {
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
-        if (remain_char > 0)
-            notifySave();
-    }
-    
-    private void notifySave() {
-        //Show a popup to save draft to Shared pref
-        new AlertDialog.Builder(getContext())
-                .setTitle("")
-                .setMessage("Do you want to save the tweet ?")
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Save to DB Drafts
-                        Drafts drafts = new Drafts();
-                        drafts.setDraft(binding.tweetBody.getText().toString());
-                        drafts.save();
-                        dismiss();
-                    }
-                })
-                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String str = null;
         User user;
-
-        //getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_dialog);
 
         binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()),
                                             R.layout.compose_fragment, container, false);
 
-        //Check for drafts else disable button
-        if(getDrafts() == 0) {
-            binding.draftButton.setVisibility(View.GONE);
-        } else {
-            //Launch drafts activity
-            binding.draftButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fm = getFragmentManager();
-                    DraftsDialog fDialog = new DraftsDialog();
-                    fDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Dialog);
-
-                    //Dialog listener
-                    fDialog.setFinishDialogListener(new DraftsDialog.DraftsListener() {
-                        @Override
-                        public void onFinishDialog(String draft) {
-                            if (draft != null) {
-                                binding.tweetBody.append(draft);
-                                binding.tweetCount.setText(String.valueOf((MAX_TWEET_LENGTH-binding.tweetBody.length())));
-                                if(getDrafts() == 0) {
-                                    binding.draftButton.setVisibility(View.GONE);
-                                }
-                            }
-                        }
-                    });
-                    fDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppThemeFullScreen);
-                    fDialog.show(getActivity().getSupportFragmentManager(), "");
-                }
-            });
-        }
-
-        //Show keyboard
         KeyboardUtility.showKeyboard(getContext(), binding.tweetBody);
 
-        //Fetch logged in user info
         Bundle bundle = getArguments();
         if (bundle != null) {
             user = bundle.getParcelable("userinfo");
-            str = bundle.getString("intentinfo", null);
             Glide.with(getContext())
                     .load(user.getProfileImageURL())
                     .into(binding.profileImage);
@@ -142,15 +67,8 @@ public class ComposeDialog extends DialogFragment {
             binding.screenName.setText("@" + user.getScreenName());
         }
 
-        //Fetch from shared preference and saved draft and display, hide drafts
-        if (str != null) {
-            binding.tweetBody.setText(str);
-            binding.draftButton.setVisibility(View.GONE);
-        }
-
         binding.tweetCount.setText(String.valueOf((MAX_TWEET_LENGTH-binding.tweetBody.length())));
 
-        //Attach a listener to count tweet length
         binding.tweetBody.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -170,27 +88,19 @@ public class ComposeDialog extends DialogFragment {
             }
         });
 
-        //Tweet when button clicked
         binding.tweetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Hide Keyboard
                 KeyboardUtility.hideKeyboard(getContext(), v);
                 postTweet();
             }
         });
 
-        //Close fragment when close button pressed
         binding.closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Hide Keyboard
                 KeyboardUtility.hideKeyboard(getContext(), getView());
-                //prompt the user if there is exsisting text
-                if (remain_char > 0)
-                    notifySave();
-                else
-                    dismiss();
+                dismiss();
             }
         });
 
@@ -200,13 +110,7 @@ public class ComposeDialog extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //To show IME at dialog oncreateview
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-    }
-
-    private int getDrafts() {
-        List<Drafts> drafts = SQLite.select().from(Drafts.class).orderBy(Drafts_Table.id, false).queryList();
-        return drafts.size();
     }
 
     private void postTweet() {
@@ -217,7 +121,6 @@ public class ComposeDialog extends DialogFragment {
         client.postTweet( binding.tweetBody.getText().toString(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //Send the data back to HomeTimeline to be added manually
                 Gson gson = new Gson();
                 Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
                 mListener.onFinishDialog(tweet);
