@@ -29,7 +29,7 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
     }
 
     @Override
-    void fetchBundle() {
+    void fetchUserInfo() {
         //Fetch user info
         Bundle args = getArguments();
         user = args.getParcelable("user");

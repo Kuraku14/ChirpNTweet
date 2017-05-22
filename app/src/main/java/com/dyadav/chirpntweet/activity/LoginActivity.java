@@ -50,7 +50,7 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
                 Intent i = new Intent(LoginActivity.this, TimelineActivity.class);
                 i.putExtra("user", user);
                 startActivity(i);
-                //finish();
+                finish();
             }
 
             @Override

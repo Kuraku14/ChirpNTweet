@@ -192,7 +192,7 @@ public class TimelineActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             Bundle bundle = new Bundle();
-            bundle.putParcelable("mUser", mUser);
+            bundle.putParcelable("user", mUser);
             mFragmentList.get(position).setArguments(bundle);
             return mFragmentList.get(position);
         }

@@ -10,7 +10,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +70,7 @@ public abstract class BaseTimelineFragment extends Fragment {
                 try {
                     Tweet tweet = gson.fromJson(response.getJSONObject(i).toString(),Tweet.class);
                     newTweet.add(tweet);
-                } catch (JSONException e) {
+                } catch (JSONException ignored) {
                 }
             }
 
@@ -86,7 +85,6 @@ public abstract class BaseTimelineFragment extends Fragment {
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
             Toast.makeText(getContext(), R.string.error_fetch, Toast.LENGTH_SHORT).show();
-            //Show offline data
             fetchOfflineTweets();
             binding.swipeContainer.setRefreshing(false);
             binding.progressBar.setVisibility(View.GONE);
@@ -96,18 +94,15 @@ public abstract class BaseTimelineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.fragment_timeline, container, false);
-
-        //Client instance
         client = TwitterApplication.getRestClient();
 
-        fetchBundle();
+        fetchUserInfo();
 
         mTweetList = new ArrayList<>();
         mAdapter = new TweetAdapter(getContext(), mTweetList, user);
         binding.rView.setAdapter(mAdapter);
         binding.rView.setItemAnimator(new DefaultItemAnimator());
 
-        //Recylerview decorater
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         binding.rView.addItemDecoration(itemDecoration);
@@ -115,31 +110,24 @@ public abstract class BaseTimelineFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         binding.rView.setLayoutManager(mLayoutManager);
 
-        //Endless pagination
         scrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                //Handle fetching in a thread with delay to avoid error "API Limit reached" = 429
                 Handler handler = new Handler();
-
-                handler.postDelayed(() -> populateTimeline(false, getMaxId()), 1000);
+                handler.postDelayed(() -> populateTimeline(false, getMaxId()), 500);
             }
         };
         binding.rView.addOnScrollListener(scrollListener);
 
-        //Swipe to refresh
         binding.swipeContainer.setOnRefreshListener(() -> {
-            //Check internet
             if (!NetworkUtility.isOnline()) {
                 Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
             }
-            //Fetch first page
             populateTimeline(true, 0);
         });
 
-        //Click on tweet for detailed activity
         ItemClickSupport.addTo(binding.rView).setOnItemClickListener((recyclerView, position, v) -> {
             Intent intent = new Intent(getContext(), DetailedActivity.class);
             Tweet tweet = mTweetList.get(position);
@@ -147,10 +135,6 @@ public abstract class BaseTimelineFragment extends Fragment {
             startActivityForResult(intent, 1);
         });
 
-        // Attach FAB listener
-        //binding.fab.setOnClickListener(view -> createComposeDialog(null));
-
-        //Fetch first page
         populateTimeline(true, 0);
 
         //Show compose tweet with delay
@@ -173,8 +157,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void fetchBundle() {
-        //Fetch user info
+    void fetchUserInfo() {
         Bundle args = getArguments();
         user = args.getParcelable("user");
     }
@@ -185,7 +168,7 @@ public abstract class BaseTimelineFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putParcelable("userinfo", user);
             bundle.putString("intentinfo", s);
-            //Dialog listener
+
             fDialog.setFinishDialogListener(tweet -> {
                 if (tweet != null) {
                     mTweetList.add(0, tweet);
@@ -203,7 +186,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         return mTweetList.get(mTweetList.size() - 1).getUid();
     }
 
-    private void populateTimeline(final boolean request, long id) {
+    private void populateTimeline(boolean request, long id) {
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
@@ -213,13 +196,9 @@ public abstract class BaseTimelineFragment extends Fragment {
         if (!NetworkUtility.isOnline()) {
             Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
             binding.progressBar.setVisibility(View.GONE);
-            //Show offline data
             fetchOfflineTweets();
             return;
         }
-
-        Log.d("Fetch", String.valueOf(fRequest) + String.valueOf(maxId));
-
         fetchTimeline();
     }
 
