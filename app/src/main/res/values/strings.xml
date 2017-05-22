@@ -18,4 +18,6 @@
     <string name="lists">lists</string>
     <string name="connect">Connect</string>
     <string name="logout">Logout</string>
+    <string name="tab_home">HOME</string>
+    <string name="tab_mentions">MENTIONS</string>
 </resources>
