@@ -56,7 +56,7 @@ public class TimelineActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 Intent i = new Intent(TimelineActivity.this, SearchActivity.class);
                 i.putExtra("query", query);
-                i.putExtra("mUser", mUser);
+                i.putExtra("user", mUser);
                 startActivity(i);
 
                 searchItem.collapseActionView();

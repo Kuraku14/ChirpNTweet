@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -15,34 +16,29 @@ import com.dyadav.chirpntweet.modal.User;
 public class SearchActivity extends AppCompatActivity {
 
     private User mUser;
-    private String query;
-    private ActivitySearchBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
+        ActivitySearchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         getWindow().setBackgroundDrawable(null);
-        //Setting toolbar
         setSupportActionBar(binding.toolbar);
 
-        //Get query and user
         Intent i = getIntent();
         mUser = i.getParcelableExtra("user");
-        query = i.getStringExtra("query");
-        String query = getIntent().getStringExtra("query");
+        String query = i.getStringExtra("query");
         loadFragment(query);
 
-        // Display icon in the toolbar
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
-        getSupportActionBar().setTitle(query);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar !=null) {
+            getSupportActionBar().setTitle(query);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
                 return true;
@@ -60,5 +56,4 @@ public class SearchActivity extends AppCompatActivity {
         ft.replace(R.id.fragment, fragment);
         ft.commit();
     }
-
 }

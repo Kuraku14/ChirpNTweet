@@ -1,12 +1,8 @@
 package com.dyadav.chirpntweet.fragments;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -30,7 +26,6 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
 
     @Override
     void fetchUserInfo() {
-        //Fetch user info
         Bundle args = getArguments();
         user = args.getParcelable("user");
         query = args.getString("query");
@@ -49,9 +44,12 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            
+            if (jsonArray == null)
+                return;
 
             Gson gson = new Gson();
-            for(int i = 0; i < response.length(); i++) {
+            for(int i = 0; i < jsonArray.length(); i++) {
                 Tweet tweet = null;
                 try {
                     tweet = gson.fromJson(jsonArray.get(i).toString(),Tweet.class);
@@ -63,7 +61,8 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
 
             mTweetList.addAll(newTweet);
             addToDb(newTweet);
-            mAdapter.notifyDataSetChanged();
+            if (fRequest)
+                mAdapter.notifyDataSetChanged();
             binding.swipeContainer.setRefreshing(false);
             binding.progressBar.setVisibility(View.GONE);
         }
@@ -74,19 +73,4 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
             binding.progressBar.setVisibility(View.GONE);
         }
     };
-
-    @Override
-    public void setHasOptionsMenu(boolean hasMenu) {
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 }
