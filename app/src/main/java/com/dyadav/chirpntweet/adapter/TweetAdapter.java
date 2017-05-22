@@ -112,6 +112,8 @@ public class TweetAdapter extends
         if (tweet != null) {
             Glide.with(context)
                 .load(tweet.getUser().getProfileImageURL())
+                .bitmapTransform(new RoundedCornersTransformation(context,25,0))
+                .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                 .into(holder.userProfileImage);
 
             holder.tweetImage.setImageResource(0);

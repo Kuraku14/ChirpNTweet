@@ -85,6 +85,8 @@ public class TimelineActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        getWindow().setBackgroundDrawable(null);
+
         //Fetch User info
         fetchUserInfo();
 
