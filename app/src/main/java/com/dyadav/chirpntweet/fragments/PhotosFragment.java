@@ -40,7 +40,6 @@ public class PhotosFragment extends Fragment {
     private User user;
     private TwitterClient client;
     private ArrayList<String> mTweetPhotos;
-    private EndlessRecyclerViewScrollListener scrollListener;
     private Long maxId = -1L;
 
     public PhotosFragment() {}
@@ -62,7 +61,7 @@ public class PhotosFragment extends Fragment {
         binding.rvPhotos.setAdapter(mAdapter);
         binding.rvPhotos.setItemAnimator(new DefaultItemAnimator());
 
-        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Handler handler = new Handler();
@@ -112,7 +111,10 @@ public class PhotosFragment extends Fragment {
                     } catch (JSONException ignored) {
                     }
                 }
-                maxId = tweet.getUid();
+
+                if (tweet != null)
+                    maxId = tweet.getUid();
+
                 if (newTweet.size() > 0) {
                     mTweetPhotos.addAll(newTweet);
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTweetPhotos.size()-1);
