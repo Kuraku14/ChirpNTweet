@@ -32,6 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
 
+        getWindow().setBackgroundDrawable(null);
+
         //Get user info
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");

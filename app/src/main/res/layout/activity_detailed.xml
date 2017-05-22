@@ -9,6 +9,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             tools:context="com.dyadav.chirpntweet.activity.DetailedActivity">
 
             <android.support.v7.widget.Toolbar
@@ -18,33 +19,22 @@
                 android:fitsSystemWindows="true"
                 android:elevation="5dp"
                 android:minHeight="?attr/actionBarSize"
-                android:background="@android:color/white"
                 app:titleMarginStart="32dp"
                 app:contentInsetLeft="20dp"
                 app:contentInsetStart="20dp" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/profileCard"
-                android:layout_width="50dp"
+            <ImageButton
+                android:id="@+id/profileImage"
                 android:layout_height="50dp"
+                android:layout_width="50dp"
                 android:layout_below="@+id/toolbar"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:elevation="12dp"
-                app:cardCornerRadius="25dp"
                 android:layout_alignParentStart="true"
-                android:innerRadius="0dp"
-                android:shape="ring"
-                android:thicknessRatio="1.9">
-                <ImageButton
-                    android:id="@+id/profileImage"
-                    android:layout_height="50dp"
-                    android:layout_width="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"/>
-            </android.support.v7.widget.CardView>
+                android:scaleType="fitXY"
+                android:background="@android:color/transparent"/>
 
             <TextView
                 android:id="@+id/userName"
@@ -59,7 +49,7 @@
                 android:layout_marginBottom="5dp"
                 android:textColor="@android:color/primary_text_light"
                 android:gravity="center"
-                android:layout_toEndOf="@+id/profileCard" />
+                android:layout_toEndOf="@+id/profileImage" />
 
             <TextView
                 android:id="@+id/screenName"
@@ -89,7 +79,7 @@
                 android:id="@+id/tweetBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profileCard"
+                android:layout_below="@+id/profileImage"
                 android:textSize="18dp"
                 android:layout_margin="20dp"
                 android:textColor="@android:color/primary_text_light"

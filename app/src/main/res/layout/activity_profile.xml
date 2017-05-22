@@ -9,15 +9,15 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="325dp">
+            android:layout_height="325dp"
+            android:background="@android:color/white" >
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsingtoolbarlayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:titleEnabled="false"
-                android:background="@android:color/white">
+                app:titleEnabled="false" >
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -36,7 +36,7 @@
                         android:layout_height="120dp"
                         android:layout_alignParentTop="true"
                         android:scaleType="centerCrop"
-                        android:background="@color/colorPrimary"
+                        android:src="@color/colorPrimary"
                         app:layout_collapseMode="pin" />
 
                     <android.support.design.widget.TabLayout
@@ -45,7 +45,6 @@
                         android:layout_height="?attr/actionBarSize"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentStart="true"
-                        android:background="@android:color/white"
                         app:tabGravity="fill"
                         app:tabIndicatorColor="@color/colorPrimary"
                         app:tabMode="fixed"
@@ -95,7 +94,6 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginEnd="11dp"
                         android:layout_marginTop="66dp"
-                        android:background="@android:color/white"
                         android:padding="5dp"
                         app:layout_anchor="@id/backdrop"
                         app:layout_anchorGravity="bottom|left|start"
@@ -161,6 +159,7 @@
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>

@@ -112,7 +112,7 @@ public class TweetAdapter extends
         if (tweet != null) {
             Glide.with(context)
                 .load(tweet.getUser().getProfileImageURL())
-                .bitmapTransform(new RoundedCornersTransformation(context,25,0))
+                .bitmapTransform(new RoundedCornersTransformation(context,30,0))
                 .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                 .into(holder.userProfileImage);
 
@@ -123,7 +123,7 @@ public class TweetAdapter extends
                 holder.tweetImage.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(tweet.getEntities().getMedia().get(0).getMediaUrlHttps())
-                        .bitmapTransform(new RoundedCornersTransformation(context,20,0))
+                        .bitmapTransform(new RoundedCornersTransformation(context,30,0))
                         .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                         .into(holder.tweetImage);
             } else {

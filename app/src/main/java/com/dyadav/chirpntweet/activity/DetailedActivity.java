@@ -60,6 +60,8 @@ public class DetailedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detailed);
+
+        getWindow().setBackgroundDrawable(null);
         ButterKnife.bind(this);
 
         //Setting toolbar
@@ -75,6 +77,8 @@ public class DetailedActivity extends AppCompatActivity {
         user = getIntent().getParcelableExtra("user");
         Glide.with(this)
                 .load(tweet.getUser().getProfileImageURL())
+                .bitmapTransform(new RoundedCornersTransformation(this,20,0))
+                .diskCacheStrategy( DiskCacheStrategy.SOURCE )
                 .into(binding.profileImage);
 
         binding.userName.setText(tweet.getUser().getName());

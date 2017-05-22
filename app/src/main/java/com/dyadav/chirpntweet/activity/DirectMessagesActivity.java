@@ -45,6 +45,8 @@ public class DirectMessagesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_direct_messages);
+
+        getWindow().setBackgroundDrawable(null);
         client = TwitterApplication.getRestClient();
 
         setSupportActionBar(binding.toolbar);

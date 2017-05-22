@@ -22,7 +22,7 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
-
+        getWindow().setBackgroundDrawable(null);
         //Setting toolbar
         setSupportActionBar(binding.toolbar);
 

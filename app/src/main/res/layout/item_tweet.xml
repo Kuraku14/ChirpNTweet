@@ -18,6 +18,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
+            android:scaleType="fitXY"
             android:background="@android:color/transparent"/>
 
         <TextView
