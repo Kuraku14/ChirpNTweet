@@ -33,8 +33,10 @@
                     android:scheme="x-oauthflow-twitter" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DetailedActivity" />
-        <activity android:name=".activity.TimelineActivity">
+        <activity android:name=".activity.DetailedActivity"
+            android:exported="false" />
+        <activity android:name=".activity.TimelineActivity"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -43,10 +45,14 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ProfileActivity" />
-        <activity android:name=".activity.DirectMessagesActivity" />
-        <activity android:name=".activity.FollowActivity" />
-        <activity android:name=".activity.SearchActivity" />
+        <activity android:name=".activity.ProfileActivity"
+            android:exported="false" />
+        <activity android:name=".activity.DirectMessagesActivity"
+            android:exported="false" />
+        <activity android:name=".activity.FollowActivity"
+            android:exported="false" />
+        <activity android:name=".activity.SearchActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
