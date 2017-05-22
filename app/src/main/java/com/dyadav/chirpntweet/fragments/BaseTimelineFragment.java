@@ -76,8 +76,7 @@ public abstract class BaseTimelineFragment extends Fragment {
 
             mTweetList.addAll(newTweet);
             addToDb(newTweet);
-            if (fRequest)
-                mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTweetList.size()-1);
             binding.swipeContainer.setRefreshing(false);
             binding.progressBar.setVisibility(View.GONE);
         }
@@ -85,7 +84,8 @@ public abstract class BaseTimelineFragment extends Fragment {
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
             Toast.makeText(getContext(), R.string.error_fetch, Toast.LENGTH_SHORT).show();
-            fetchOfflineTweets();
+            if(mTweetList.size() == 0)
+                fetchOfflineTweets();
             binding.swipeContainer.setRefreshing(false);
             binding.progressBar.setVisibility(View.GONE);
         }

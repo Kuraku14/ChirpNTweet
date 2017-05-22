@@ -140,7 +140,7 @@ public class FollowActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUsers.size()-1);
                 binding.swipeContainer.setRefreshing(false);
             }
 
@@ -166,7 +166,7 @@ public class FollowActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUsers.size()-1);
                 binding.swipeContainer.setRefreshing(false);
             }
 

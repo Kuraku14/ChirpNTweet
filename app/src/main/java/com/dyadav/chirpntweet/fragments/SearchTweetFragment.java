@@ -61,8 +61,7 @@ public class SearchTweetFragment  extends BaseTimelineFragment{
 
             mTweetList.addAll(newTweet);
             addToDb(newTweet);
-            if (fRequest)
-                mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTweetList.size()-1);
             binding.swipeContainer.setRefreshing(false);
             binding.progressBar.setVisibility(View.GONE);
         }

@@ -26,7 +26,7 @@ public class TwitterClient extends OAuthBaseClient{
     public void getHomeTimeline(boolean fRequest, long id, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", 15);
+        params.put("count", 35);
         //only for subsequent requests
         if (!fRequest)
             params.put("max_id", id);
@@ -94,7 +94,7 @@ public class TwitterClient extends OAuthBaseClient{
     public void getMentionsTimeline(boolean fRequest, long id, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/mentions_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", 15);
+        params.put("count", 35);
         if(!fRequest)
             params.put("max_id",id);
 
@@ -105,7 +105,7 @@ public class TwitterClient extends OAuthBaseClient{
     public void getUsersTimeline(boolean fRequest, long id, String screenName, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/user_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", 15);
+        params.put("count", 35);
         params.put("screen_name", screenName);
         if(!fRequest)
             params.put("max_id",id);
@@ -117,7 +117,7 @@ public class TwitterClient extends OAuthBaseClient{
     public void getFavoriteTweets(boolean fRequest, long id, String screenName, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("favorites/list.json");
         RequestParams params = new RequestParams();
-        params.put("count", 15);
+        params.put("count", 35);
         params.put("screen_name", screenName);
         if(!fRequest)
             params.put("max_id",id);

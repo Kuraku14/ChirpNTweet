@@ -115,8 +115,7 @@ public class PhotosFragment extends Fragment {
                 maxId = tweet.getUid();
                 if (newTweet.size() > 0) {
                     mTweetPhotos.addAll(newTweet);
-                    if (fRequest)
-                        mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTweetPhotos.size()-1);
                     binding.swipeContainer.setRefreshing(false);
                     binding.progressBar.setVisibility(View.GONE);
                 } else {

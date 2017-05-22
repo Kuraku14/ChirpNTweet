@@ -111,7 +111,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
                     }
 
                     mMessages.addAll(msg);
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mMessages.size()-1);
                     binding.swipeContainer.setRefreshing(false);
                 } catch (Exception e) {
                     e.printStackTrace();
