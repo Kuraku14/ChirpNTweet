@@ -1,7 +1,6 @@
 package com.dyadav.chirpntweet.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,27 +13,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyadav.chirpntweet.R;
-import com.dyadav.chirpntweet.activity.DetailedActivity;
-import com.dyadav.chirpntweet.activity.ProfileActivity;
-import com.dyadav.chirpntweet.activity.SearchActivity;
-import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.modal.Tweet;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.dyadav.chirpntweet.utils.DateUtility;
 import com.dyadav.chirpntweet.utils.PatternEditableBuilder;
-import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetAdapter extends
@@ -44,6 +33,42 @@ public class TweetAdapter extends
     private Context context;
     private TwitterClient client;
     private User loggedUser;
+
+    public interface profileClickListener {
+        void onProfileClicked(User loggedUser, User user);
+    }
+
+    private profileClickListener pListener;
+
+    public interface favClickListener {
+        void onFavClicked(boolean favorited, long uid, int position);
+    }
+
+    private favClickListener fListener;
+
+    public interface retweetClickListener {
+        void onRetweetClicked(boolean retweeted, long uid, int position);
+    }
+
+    private retweetClickListener rListener;
+
+    public interface replyClickListener {
+        void onReplyClicked(User loggedUser, Tweet tweet);
+    }
+
+    private replyClickListener repListener;
+
+    public interface hashtagClickListener {
+        void hashtagClicked(User loggedUser, String text);
+    }
+
+    private hashtagClickListener hListener;
+
+    public interface atClickListener {
+        void atClicked(String text);
+    }
+
+    private atClickListener aListener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.userName)
@@ -85,7 +110,7 @@ public class TweetAdapter extends
         @BindView(R.id.tweetImage)
         ImageView tweetImage;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
@@ -95,6 +120,36 @@ public class TweetAdapter extends
         this.tweetList = tweetList;
         this.context = context;
         this.loggedUser = loggedUser;
+        this.fListener = null;
+        this.repListener = null;
+        this.rListener = null;
+        this.hListener = null;
+        this.aListener = null;
+        this.pListener = null;
+    }
+
+    public void setFavClickListener(favClickListener listener) {
+        this.fListener = listener;
+    }
+
+    public void setReplyClickListener(replyClickListener listener) {
+        this.repListener = listener;
+    }
+
+    public void setRetweetClickListener(retweetClickListener listener) {
+        this.rListener = listener;
+    }
+
+    public void setProfileClickListener(profileClickListener listener) {
+        this.pListener = listener;
+    }
+
+    public void setHashtagClickListener(hashtagClickListener listener) {
+        this.hListener = listener;
+    }
+
+    public void setAtClickListener(atClickListener listener) {
+        this.aListener = listener;
     }
 
     @Override
@@ -106,7 +161,7 @@ public class TweetAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Tweet tweet = tweetList.get(position);
 
         if (tweet != null) {
@@ -152,117 +207,34 @@ public class TweetAdapter extends
             holder.favCount.setText(String.valueOf(tweet.getFavoriteCount()));
             holder.retweetCount.setText(String.valueOf(tweet.getRetweetCount()));
 
-            holder.userProfileImage.setOnClickListener(v -> {
-                //If same user do not launch
-                if  (loggedUser.getScreenName().equals(tweet.getUser().getScreenName()))
-                    return;
-                //else finish and launch
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("user", tweet.getUser());
-                context.startActivity(intent);
-            });
+            holder.userProfileImage.setOnClickListener(v -> pListener.onProfileClicked(loggedUser, tweet.getUser()));
 
-            holder.favorite.setOnClickListener(v -> markFavorite(tweet.isFavorited(), tweet.getUid(), position));
+            holder.favorite.setOnClickListener(v -> fListener.onFavClicked(tweet.isFavorited(), tweet.getUid(), position));
 
-            holder.retweet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    retweet(tweet.isRetweeted(), tweet.getUid(), position);
-                }
-            });
+            holder.retweet.setOnClickListener(v -> rListener.onRetweetClicked(tweet.isRetweeted(), tweet.getUid(), position));
 
-            holder.reply.setOnClickListener(v -> {
-                Intent intent = new Intent(context, DetailedActivity.class);
-                intent.putExtra("tweet", tweet);
-                intent.putExtra("user", loggedUser);
-                context.startActivity(intent);
-            });
+            holder.reply.setOnClickListener(v -> repListener.onReplyClicked(loggedUser, tweet));
 
             new PatternEditableBuilder().
-                    addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
-                            text -> openProfileView(text)).into(holder.tweetBody);
+                    addPattern(Pattern.compile("@(\\w+)"), Color.BLUE,
+                            this::openProfileView).into(holder.tweetBody);
 
             new PatternEditableBuilder().
-                    addPattern(Pattern.compile("\\#(\\w+)"), Color.BLUE,
-                            text -> openTrendsView(text)).into(holder.tweetBody);
+                    addPattern(Pattern.compile("#(\\w+)"), Color.BLUE,
+                            this::openTrendsView).into(holder.tweetBody);
         }
     }
 
     private void openTrendsView(String text) {
-        Intent i = new Intent(context, SearchActivity.class);
-        i.putExtra("query", text);
-        i.putExtra("user", loggedUser);
-        context.startActivity(i);
+        hListener.hashtagClicked(loggedUser, text);
     }
 
     private void openProfileView(String text) {
-        //Get user info using screename and launch profile activity
-        client = TwitterApplication.getRestClient();
-        client.lookupUser(text.replace("@", ""), new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                try {
-                    Gson gson = new Gson();
-                    User spanUser = gson.fromJson(response.get(0).toString(), User.class);
-
-                    Intent intent = new Intent(context, ProfileActivity.class);
-                    intent.putExtra("user", spanUser);
-                    context.startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-            }
-        });
+        aListener.atClicked(text);
     }
 
     @Override
     public int getItemCount() {
         return tweetList.size();
-    }
-
-    private void markFavorite(boolean favorite, Long id, final int position) {
-        client = TwitterApplication.getRestClient();
-        client.setFavorite(!favorite, id, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    Gson gson = new Gson();
-                    Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
-                    tweetList.set(position, tweet);
-                    notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-            }
-        });
-    }
-
-    private void retweet(boolean isRetweet, Long id, final int position) {
-        client = TwitterApplication.getRestClient();
-        client.retweet(!isRetweet, id,new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    Gson gson = new Gson();
-                    Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
-                    tweetList.set(position, tweet);
-                    notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-            }
-        });
     }
 }

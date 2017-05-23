@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.activity.DetailedActivity;
+import com.dyadav.chirpntweet.activity.ProfileActivity;
+import com.dyadav.chirpntweet.activity.SearchActivity;
 import com.dyadav.chirpntweet.adapter.TweetAdapter;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.data.TwitterDb;
@@ -137,7 +139,116 @@ public abstract class BaseTimelineFragment extends Fragment {
 
         populateTimeline(true, 0);
 
+        handleClicks();
+
         return binding.getRoot();
+    }
+
+    private void handleClicks() {
+        mAdapter.setFavClickListener(new TweetAdapter.favClickListener() {
+            @Override
+            public void onFavClicked(boolean favorited, long uid, int position) {
+                client = TwitterApplication.getRestClient();
+                client.setFavorite(!favorited, uid, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            Gson gson = new Gson();
+                            Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
+                            mTweetList.set(position, tweet);
+                            mAdapter.notifyItemChanged(position);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    }
+                });
+            }
+        });
+
+        mAdapter.setRetweetClickListener(new TweetAdapter.retweetClickListener() {
+            @Override
+            public void onRetweetClicked(boolean retweeted, long uid, int position) {
+                client = TwitterApplication.getRestClient();
+                client.retweet(!retweeted, uid,new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            Gson gson = new Gson();
+                            Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
+                            mTweetList.set(position, tweet);
+                            mAdapter.notifyItemChanged(position);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    }
+                });
+            }
+        });
+
+        mAdapter.setReplyClickListener(new TweetAdapter.replyClickListener() {
+            @Override
+            public void onReplyClicked(User loggedUser, Tweet tweet) {
+                Intent intent = new Intent(getContext(), DetailedActivity.class);
+                intent.putExtra("tweet", tweet);
+                intent.putExtra("user", loggedUser);
+                getContext().startActivity(intent);
+            }
+        });
+
+        mAdapter.setProfileClickListener(new TweetAdapter.profileClickListener() {
+            @Override
+            public void onProfileClicked(User loggedUser, User user) {
+                if  (loggedUser.getScreenName().equals(user.getScreenName()))
+                    return;
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.putExtra("user", user);
+                getContext().startActivity(intent);
+            }
+        });
+
+        mAdapter.setHashtagClickListener(new TweetAdapter.hashtagClickListener() {
+            @Override
+            public void hashtagClicked(User loggedUser, String text) {
+                Intent i = new Intent(getContext(), SearchActivity.class);
+                i.putExtra("query", text);
+                i.putExtra("user", loggedUser);
+                getContext().startActivity(i);
+            }
+        });
+
+        mAdapter.setAtClickListener(new TweetAdapter.atClickListener() {
+            @Override
+            public void atClicked(String text) {
+                client = TwitterApplication.getRestClient();
+                client.lookupUser(text.replace("@", ""), new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        try {
+                            Gson gson = new Gson();
+                            User spanUser = gson.fromJson(response.get(0).toString(), User.class);
+
+                            Intent intent = new Intent(getContext(), ProfileActivity.class);
+                            intent.putExtra("user", spanUser);
+                            getContext().startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    }
+                });
+            }
+        });
     }
 
     void fetchUserInfo() {
