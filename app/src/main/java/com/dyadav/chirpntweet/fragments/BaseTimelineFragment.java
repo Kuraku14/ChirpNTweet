@@ -99,7 +99,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         fetchUserInfo();
 
         mTweetList = new ArrayList<>();
-        mAdapter = new TweetAdapter(getContext(), mTweetList, user);
+        mAdapter = new TweetAdapter(getActivity().getApplicationContext(), mTweetList, user);
         binding.rView.setAdapter(mAdapter);
         binding.rView.setItemAnimator(new DefaultItemAnimator());
 
@@ -120,7 +120,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         binding.rView.addOnScrollListener(scrollListener);
 
         binding.swipeContainer.setOnRefreshListener(() -> {
-            if (!NetworkUtility.isOnline()) {
+            if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
                 Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
@@ -176,7 +176,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         maxId = id;
         fRequest = request;
 
-        if (!NetworkUtility.isOnline()) {
+        if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
             Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
             binding.progressBar.setVisibility(View.GONE);
             fetchOfflineTweets();

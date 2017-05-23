@@ -57,7 +57,7 @@ public class PhotosFragment extends Fragment {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
         binding.rvPhotos.setLayoutManager(gridLayoutManager);
-        mAdapter = new ProfilePhotosAdapter(mTweetPhotos, getActivity());
+        mAdapter = new ProfilePhotosAdapter(mTweetPhotos, getActivity().getApplicationContext());
         binding.rvPhotos.setAdapter(mAdapter);
         binding.rvPhotos.setItemAnimator(new DefaultItemAnimator());
 
@@ -71,7 +71,7 @@ public class PhotosFragment extends Fragment {
         binding.rvPhotos.addOnScrollListener(scrollListener);
 
         binding.swipeContainer.setOnRefreshListener(() -> {
-            if (!NetworkUtility.isOnline()) {
+            if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
                 Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
@@ -84,7 +84,7 @@ public class PhotosFragment extends Fragment {
     }
 
     private void fetchPhotos(boolean fRequest) {
-        if (!NetworkUtility.isOnline()) {
+        if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
             Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
             binding.swipeContainer.setRefreshing(false);
             return;
