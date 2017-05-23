@@ -80,7 +80,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
         //Swipe to refresh
         binding.swipeContainer.setOnRefreshListener(() -> {
             //Check internet
-            if (!NetworkUtility.isOnline(this)) {
+            if (!NetworkUtility.isOnline()) {
                 Toast.makeText(this, R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;

@@ -93,7 +93,7 @@ public class FollowActivity extends AppCompatActivity {
 
         //Swipe to refresh
         binding.swipeContainer.setOnRefreshListener(() -> {
-            if (!NetworkUtility.isOnline(this)) {
+            if (!NetworkUtility.isOnline()) {
                 Toast.makeText(this, R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
@@ -104,6 +104,62 @@ public class FollowActivity extends AppCompatActivity {
 
         //Call twitter API
         selectTwitterAPI();
+        setProfileClickListener();
+        setFollowClickListener();
+    }
+
+    private void setFollowClickListener() {
+        mAdapter.setFollowClickListener(new FollowAdapter.followClickListener() {
+
+            @Override
+            public void onFollowClicked(User user, int position) {
+                if (user.isFollowing() || user.isFollow_request_sent()) {
+                    client.unfollowUser(user.getScreenName(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Gson gson = new Gson();
+                            User user = gson.fromJson(response.toString(), User.class);
+                            //TODO: Remove this patch fix
+                            user.setFollowing(false);
+                            mUsers.set(position, user);
+                            mAdapter.notifyItemChanged(position);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                        }
+                    });
+                } else {
+                    client.followUser(user.getScreenName(), new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Gson gson = new Gson();
+                            User user = gson.fromJson(response.toString(), User.class);
+                            user.setFollowing(true);
+                            mUsers.set(position, user);
+                            mAdapter.notifyItemChanged(position);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void setProfileClickListener() {
+        mAdapter.setProfileClickListener(new FollowAdapter.profileClickListener() {
+            @Override
+            public void onProfileClicked(User user) {
+                Intent intent = new Intent(FollowActivity.this, ProfileActivity.class);
+                intent.putExtra("user", user);
+                FollowActivity.this.startActivity(intent);
+            }
+        });
     }
 
     @Override

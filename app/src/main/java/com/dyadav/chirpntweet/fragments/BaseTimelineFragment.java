@@ -120,7 +120,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         binding.rView.addOnScrollListener(scrollListener);
 
         binding.swipeContainer.setOnRefreshListener(() -> {
-            if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
+            if (!NetworkUtility.isOnline()) {
                 Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
@@ -176,7 +176,7 @@ public abstract class BaseTimelineFragment extends Fragment {
         maxId = id;
         fRequest = request;
 
-        if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
+        if (!NetworkUtility.isOnline()) {
             Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
             binding.progressBar.setVisibility(View.GONE);
             fetchOfflineTweets();

@@ -71,7 +71,7 @@ public class PhotosFragment extends Fragment {
         binding.rvPhotos.addOnScrollListener(scrollListener);
 
         binding.swipeContainer.setOnRefreshListener(() -> {
-            if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
+            if (!NetworkUtility.isOnline()) {
                 Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 return;
@@ -84,7 +84,7 @@ public class PhotosFragment extends Fragment {
     }
 
     private void fetchPhotos(boolean fRequest) {
-        if (!NetworkUtility.isOnline(getActivity().getApplicationContext())) {
+        if (!NetworkUtility.isOnline()) {
             Toast.makeText(getContext(), R.string.connection_error, Toast.LENGTH_SHORT).show();
             binding.swipeContainer.setRefreshing(false);
             return;

@@ -1,7 +1,6 @@
 package com.dyadav.chirpntweet.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +10,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dyadav.chirpntweet.R;
-import com.dyadav.chirpntweet.activity.ProfileActivity;
 import com.dyadav.chirpntweet.application.TwitterApplication;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
-import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 
 public class FollowAdapter  extends
         RecyclerView.Adapter<FollowAdapter.MyViewHolder> {
@@ -32,6 +25,18 @@ public class FollowAdapter  extends
     private ArrayList<User> mUsers;
     private Context context;
     private TwitterClient client;
+
+    public interface followClickListener {
+        void onFollowClicked(User user, int position);
+    }
+
+    private followClickListener fListener;
+
+    public interface profileClickListener {
+        void onProfileClicked(User user);
+    }
+
+    private profileClickListener pListener;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.userName)
@@ -63,6 +68,16 @@ public class FollowAdapter  extends
         this.mUsers = users;
         this.context = context;
         client = TwitterApplication.getRestClient();
+        this.fListener = null;
+        this.pListener = null;
+    }
+
+    public void setFollowClickListener(followClickListener listener) {
+        this.fListener = listener;
+    }
+
+    public void setProfileClickListener(profileClickListener listener) {
+        this.pListener = listener;
     }
 
     @Override
@@ -97,46 +112,9 @@ public class FollowAdapter  extends
                 holder.followIcon.setBackgroundResource(R.drawable.following_border);
             }
 
-            holder.userProfileImage.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("user", user);
-                context.startActivity(intent);
-            });
+            holder.userProfileImage.setOnClickListener(v -> pListener.onProfileClicked(user));
 
-            //Set follow/unfollow
-            holder.followIcon.setOnClickListener(v -> {
-                if (user.isFollowing() || user.isFollow_request_sent()) {
-                    client.unfollowUser(user.getScreenName(), new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            Gson gson = new Gson();
-                            User user = gson.fromJson(response.toString(), User.class);
-                            mUsers.set(position, user);
-                            notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                        }
-                    });
-                } else {
-                    client.followUser(user.getScreenName(), new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            Gson gson = new Gson();
-                            User user = gson.fromJson(response.toString(), User.class);
-                            mUsers.set(position, user);
-                            notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                        }
-                    });
-                }
-            });
+            holder.followIcon.setOnClickListener(v -> fListener.onFollowClicked(user, position));
         }
     }
 
