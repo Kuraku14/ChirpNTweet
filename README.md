@@ -44,11 +44,7 @@ The following **additional** features are implemented:
 * [x] UI similiar to official twitter app
   * [x] Navigation drawer with header image
   * [x] Color pallete similiar to official twitter app. e.g. white toolbars, color pallate themed icons
-* [x] Clickable spans
-  * [x] When clicked on @Username profile view is shown
-  * [x] When clicked on #hashtag serach view with related tweets is shown
 * [x] Signout option
-* [x] Retrolambda used for even handling
 * [x] Twitter Key and Secret stored on a file
 
 ## Video Walkthrough on Dropbox
