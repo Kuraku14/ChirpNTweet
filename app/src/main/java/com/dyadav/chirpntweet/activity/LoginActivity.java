@@ -1,15 +1,14 @@
 package com.dyadav.chirpntweet.activity;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.codepath.oauth.OAuthLoginActivity;
 import com.dyadav.chirpntweet.R;
 import com.dyadav.chirpntweet.application.TwitterApplication;
-import com.dyadav.chirpntweet.databinding.ActivityLoginBinding;
 import com.dyadav.chirpntweet.modal.User;
 import com.dyadav.chirpntweet.rest.TwitterClient;
 import com.google.gson.Gson;
@@ -20,13 +19,10 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
-
-    private ActivityLoginBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        setContentView(R.layout.activity_login);
         getWindow().setBackgroundDrawable(null);
     }
 
@@ -36,7 +32,8 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 
     @Override
     public void onLoginSuccess() {
-        binding.loginButton.setVisibility(View.GONE);
+        Button button = (Button) findViewById(R.id.loginButton);
+        button.setVisibility(View.GONE);
 
         TwitterClient client = TwitterApplication.getRestClient();
         client.getAccountInfo(new JsonHttpResponseHandler() {

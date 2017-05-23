@@ -1,44 +1,43 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <RelativeLayout
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.LoginActivity"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/twitter_logo"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/twitter_logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="98dp" />
+
+    <TextView
+        android:id="@+id/appname"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activity.LoginActivity"
-        android:background="@color/colorPrimary">
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/logo"
+        android:textSize="40sp" />
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/twitter_logo"
-            android:scaleType="fitXY"
-            android:contentDescription="@string/twitter_logo"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="98dp" />
-
-        <TextView
-            android:id="@+id/appname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:layout_below="@+id/logo"
-            android:textSize="40sp" />
-
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/appname"
-            android:layout_margin="20dp"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"
-            android:background="@drawable/login_btn_bgn"
-            android:onClick="loginToRest"
-            android:text="@string/login" />
-    </RelativeLayout>
-</layout>
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/appname"
+        android:layout_margin="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/login_btn_bgn"
+        android:onClick="loginToRest"
+        android:text="@string/login" />
+</RelativeLayout>
