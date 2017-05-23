@@ -54,4 +54,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
 }

@@ -5,10 +5,10 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -64,64 +64,88 @@ public class DetailedActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawable(null);
         ButterKnife.bind(this);
 
-        //Setting toolbar
         setSupportActionBar(binding.toolbar);
 
-        // Display icon in the toolbar
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
-        getSupportActionBar().setTitle("Tweet");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
 
-        //Get tweet info and display
-        final Tweet tweet = getIntent().getExtras().getParcelable("tweet");
-        user = getIntent().getParcelableExtra("user");
-        Glide.with(this)
-                .load(tweet.getUser().getProfileImageURL())
-                .bitmapTransform(new RoundedCornersTransformation(this,20,0))
-                .diskCacheStrategy( DiskCacheStrategy.SOURCE )
-                .into(binding.profileImage);
-
-        binding.userName.setText(tweet.getUser().getName());
-        binding.screenName.setText("@" + tweet.getUser().getScreenName());
-        binding.tweetBody.setText(tweet.getBody());
-
-        new PatternEditableBuilder().
-                addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
-                        text -> openProfileView(text)).into(binding.tweetBody);
-
-        new PatternEditableBuilder().
-                addPattern(Pattern.compile("\\#(\\w+)"), Color.BLUE,
-                        text -> openTrendsView(text)).into(binding.tweetBody);
-
-        binding.timeStamp.setText(DateUtility.detailedViewFormatDate(tweet.getCreatedAt()));
-        if(tweet.getUser().getVerified())
-            binding.verified.setImageDrawable(getResources().getDrawable(R.drawable.verified));
-
-        if(tweet.getFavorited())
-            favorite_icon.setImageDrawable(getResources().getDrawable(R.drawable.red_heart));
-
-        if(tweet.getRetweeted())
-            retweet_icon.setImageDrawable(getResources().getDrawable(R.drawable.green_retweet));
-        favorite_count.setText(String.valueOf(tweet.getFavoriteCount()));
-        retweet_count.setText(String.valueOf(tweet.getRetweetCount()));
-
-        if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
-                !tweet.getEntities().getMedia().isEmpty()  &&
-                tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null) {
-            Glide.with(this)
-                    .load(tweet.getEntities().getMedia().get(0).getMediaUrlHttps())
-                    .bitmapTransform(new RoundedCornersTransformation(this,20,0))
-                    .diskCacheStrategy( DiskCacheStrategy.SOURCE )
-                    .into(binding.tweetImage);
-            binding.tweetImage.setVisibility(View.VISIBLE);
-        } else {
-            binding.tweetImage.setVisibility(View.GONE);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Tweet");
         }
 
-        binding.replyTweet.setText("@" + tweet.getUser().getScreenName());
-        binding.tweetCount.setText(String.valueOf((140- binding.replyTweet.length())));
+        user = getIntent().getParcelableExtra("user");
 
-        //Attach a listener to count tweet length
+        Tweet tweet = getIntent().getExtras().getParcelable("tweet");
+
+        if (tweet != null) {
+            Glide.with(this)
+                    .load(tweet.getUser().getProfileImageURL())
+                    .bitmapTransform(new RoundedCornersTransformation(this, 20, 0))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(binding.profileImage);
+
+            binding.userName.setText(tweet.getUser().getName());
+            binding.screenName.setText("@" + tweet.getUser().getScreenName());
+            binding.tweetBody.setText(tweet.getBody());
+            binding.timeStamp.setText(DateUtility.detailedViewFormatDate(tweet.getCreatedAt()));
+            if(tweet.getUser().getVerified())
+                binding.verified.setImageDrawable(getResources().getDrawable(R.drawable.verified));
+
+            if(tweet.getFavorited())
+                favorite_icon.setImageDrawable(getResources().getDrawable(R.drawable.red_heart));
+
+            if(tweet.getRetweeted())
+                retweet_icon.setImageDrawable(getResources().getDrawable(R.drawable.green_retweet));
+            favorite_count.setText(String.valueOf(tweet.getFavoriteCount()));
+            retweet_count.setText(String.valueOf(tweet.getRetweetCount()));
+
+            if(tweet.getEntities()!=null && tweet.getEntities().getMedia()!=null &&
+                    !tweet.getEntities().getMedia().isEmpty()  &&
+                    tweet.getEntities().getMedia().get(0).getMediaUrlHttps()!=null) {
+                Glide.with(this)
+                        .load(tweet.getEntities().getMedia().get(0).getMediaUrlHttps())
+                        .bitmapTransform(new RoundedCornersTransformation(this,20,0))
+                        .diskCacheStrategy( DiskCacheStrategy.SOURCE )
+                        .into(binding.tweetImage);
+                binding.tweetImage.setVisibility(View.VISIBLE);
+            } else {
+                binding.tweetImage.setVisibility(View.GONE);
+            }
+
+            binding.replyTweet.setText("@" + tweet.getUser().getScreenName());
+            binding.tweetCount.setText(String.valueOf((140- binding.replyTweet.length())));
+
+            binding.retweetBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    KeyboardUtility.hideKeyboard(DetailedActivity.this, v);
+                    replyTweet(tweet.getUid(), binding.replyTweet.getText().toString());
+                }
+            });
+
+            favorite_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    markFavorite(tweet.isFavorited(), tweet.getUid());
+                }
+            });
+
+            retweet_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    retweet(tweet.isRetweeted(), tweet.getUid());
+                }
+            });
+        }
+
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("@(\\w+)"), Color.BLUE,
+                        this::openProfileView).into(binding.tweetBody);
+
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("#(\\w+)"), Color.BLUE,
+                        this::openTrendsView).into(binding.tweetBody);
+
         binding.replyTweet.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -139,29 +163,6 @@ public class DetailedActivity extends AppCompatActivity {
 
             }
         });
-
-        binding.retweetBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Hide Keyboard
-                KeyboardUtility.hideKeyboard(DetailedActivity.this, v);
-                replyTweet(tweet.getUid(), binding.replyTweet.getText().toString());
-            }
-        });
-
-        favorite_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markFavorite(tweet.isFavorited(), tweet.getUid());
-            }
-        });
-
-        retweet_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retweet(tweet.isRetweeted(), tweet.getUid());
-            }
-        });
     }
 
     private void openTrendsView(String text) {
@@ -172,13 +173,11 @@ public class DetailedActivity extends AppCompatActivity {
     }
 
     private void openProfileView(String text) {
-        //Get user info using screename and launch profile activity
         client = TwitterApplication.getRestClient();
         client.lookupUser(text.replace("@", ""), new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
-                    Log.d("user", response.get(0).toString());
                     Gson gson = new Gson();
                     User spanUser = gson.fromJson(response.get(0).toString(), User.class);
 
@@ -199,7 +198,6 @@ public class DetailedActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
                 return true;
@@ -215,7 +213,6 @@ public class DetailedActivity extends AppCompatActivity {
                 try {
                     Gson gson = new Gson();
                     Tweet tweet = gson.fromJson(response.toString(), Tweet.class);
-                    //Update icon and count
                     favorite_count.setText(String.valueOf(tweet.getFavoriteCount()));
                     if(tweet.getFavorited())
                         favorite_icon.setImageDrawable(getResources().getDrawable(R.drawable.red_heart));

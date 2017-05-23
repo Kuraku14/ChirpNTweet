@@ -127,7 +127,6 @@ public class PhotosFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                Toast.makeText(getContext(), "Error getting photos", Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);
                 binding.progressBar.setVisibility(View.GONE);
             }

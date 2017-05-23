@@ -39,7 +39,7 @@
             android:layout_alignParentTop="true"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_margin="5dp"
+            android:layout_marginRight="5dp"
             android:textColor="@android:color/primary_text_light"
             android:layout_toEndOf="@+id/profileImage"
             android:layout_toRightOf="@+id/profileImage" />
@@ -48,9 +48,9 @@
             android:id="@+id/screenName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignTop="@+id/userName"
+            android:layout_alignBottom="@+id/userName"
             android:textSize="12sp"
-            android:layout_margin="5dp"
             android:textColor="@android:color/primary_text_light"
             android:layout_toEndOf="@+id/userName"
             android:layout_toRightOf="@+id/userName" />
@@ -61,7 +61,8 @@
             android:layout_height="15dp"
             android:layout_margin="5dp"
             android:layout_toEndOf="@+id/screenName"
-            android:layout_toRightOf="@+id/screenName"/>
+            android:layout_toRightOf="@+id/screenName"
+            android:layout_alignBottom="@+id/userName"/>
 
         <TextView
             android:id="@+id/tweetBody"
