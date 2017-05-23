@@ -4,8 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import java.io.IOException;
-
 public class NetworkUtility {
 
     public boolean isNetworkAvailable(Context context) {
@@ -17,12 +15,17 @@ public class NetworkUtility {
 
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
+        Process ipProcess = null;
         try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int     exitValue = ipProcess.waitFor();
+            if(ipProcess!=null) { ipProcess.destroy(); }
             return (exitValue == 0);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        }  catch (InterruptedException e) {
+            if(ipProcess!=null) { ipProcess.destroy(); }
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            if(ipProcess!=null) { ipProcess.destroy(); }
         }
         return false;
     }
