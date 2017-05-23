@@ -92,9 +92,9 @@
             android:layout_toRightOf="@+id/timeStamp"
             android:layout_toEndOf="@+id/timeStamp"
             android:layout_below="@+id/tweetImage"
+            android:layout_alignStart="@+id/userName"
             android:layout_marginLeft="5dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_marginTop="15dp"/>
 
     </RelativeLayout>
 </layout>

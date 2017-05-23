@@ -49,7 +49,7 @@ public class DetailedActivity extends AppCompatActivity {
     @BindView(R.id.retweet_count)
     TextView retweet_count;
 
-    @BindView(R.id.facvorite_count)
+    @BindView(R.id.favorite_count)
     TextView favorite_count;
 
     private ActivityDetailedBinding binding;

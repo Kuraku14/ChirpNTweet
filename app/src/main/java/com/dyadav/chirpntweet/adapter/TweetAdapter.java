@@ -76,7 +76,7 @@ public class TweetAdapter extends
         @BindView(R.id.message_icon)
         ImageButton message;
 
-        @BindView(R.id.facvorite_count)
+        @BindView(R.id.favorite_count)
         TextView favCount;
 
         @BindView(R.id.retweet_count)
