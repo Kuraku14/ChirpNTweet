@@ -41,28 +41,12 @@ The following **bonus** features are implemented:
 * [x] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
 * [x] Replace Picasso with [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) for more efficient image rendering.
 * [x] Enable your app to [receive implicit intents](http://guides.codepath.com/android/Using-Intents-to-Create-Flows#receiving-implicit-intents) from other apps.  When a link is shared from a web browser, it should pre-fill the text and title of the web page when composing a tweet.
-* [x] When a user leaves the compose view without publishing and there is existing text, prompt to save or delete the draft.  The draft can be resumed from the compose view.
-
-The following **additional** features are implemented:
-
-* [x] UI Polish/Features
-  * [x] Action button Reply/Retweet/Favorite/Message. User can take all action on these from either timeline or detailed view
-  * [x] App icon on toolbar
-  * [x] Progressbar while infinte pagination
-  * [x] Profile image shown as circular and not square
-* [x] Actionbar button on TimelineActivity to scroll to top
-* [x] Avoid API Request failure by sending more tweet requests with delay and if error resend the request
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
 <a href='https://www.dropbox.com/s/ujdhiaoqmd17jl6/Simple%20Twitter%20Client%20Walkthrough.mp4?dl=0'>Video Walkthrough on Dropbox</a>
-
-## Notes
-
-1. Playing Videos in the list view like Twitter app was a challenge. But had to take the short route and use Media Player
-2. Timeline json parsing was lot of trial and error
 
 ## Open-source libraries used
 
